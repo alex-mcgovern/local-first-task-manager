@@ -20,6 +20,7 @@ import * as i18n from "@shared/i18n";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { faPlus } from "@fortawesome/pro-solid-svg-icons/faPlus";
 import "../css/index.css";
+import { IconTaskStatus } from "./icon-task-status";
 
 const createTaskSchema = TasksSchema.omit({ created_at: true, updated_at: true, id: true });
 type CreateTask = z.infer<typeof createTaskSchema>;
@@ -63,7 +64,7 @@ export function DialogNewTask() {
 								<Dialog.CloseButton />
 							</Dialog.Header>
 							<Dialog.Content>
-								<FormTextField className="mb-4" name="title">
+								<FormTextField autoFocus className="mb-4" name="title">
 									<Label>{i18n.title}</Label>
 									<Input />
 								</FormTextField>
@@ -75,12 +76,25 @@ export function DialogNewTask() {
 
 								<FormComboBox<task_statusType>
 									items={[
-										{ id: "to_do", name: i18n.status_to_do },
-										{ id: "in_progress", name: i18n.status_in_progress },
-										{ id: "completed", name: i18n.status_completed },
+										{
+											slotLeft: <IconTaskStatus status="to_do" />,
+											id: "to_do",
+											name: i18n.status_to_do,
+										},
+										{
+											slotLeft: <IconTaskStatus status="in_progress" />,
+											id: "in_progress",
+											name: i18n.status_in_progress,
+										},
+										{
+											slotLeft: <IconTaskStatus status="completed" />,
+											id: "completed",
+											name: i18n.status_completed,
+										},
 									]}
 									className="mb-4"
 									name="status"
+									defaultSelectedKey="to_do"
 								>
 									<Label>{i18n.status}</Label>
 									<Group>

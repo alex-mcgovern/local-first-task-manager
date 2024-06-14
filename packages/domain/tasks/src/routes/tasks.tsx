@@ -1,17 +1,18 @@
 import { App, Table } from "boondoggle";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLiveQuery } from "electric-sql/react";
 import { Tasks as Payment, useElectric } from "@shared/electric-sql";
 import { DialogNewTask } from "../components/dialog-new-task";
-import { MenuTasksActions } from "../components/menu-payments-actions";
-import { MenuTaskStatus } from "../components/task-status";
-import { DrawerTaskDetails } from "../components/drawer-task-details";
+import { MenuTasksActions } from "../components/menu-task-actions";
+import { MenuTaskStatus } from "../components/menu-task-status";
+import type { Selection } from "react-aria-components";
 
 export function Tasks() {
 	const { db } = useElectric()!;
 	const { results } = useLiveQuery(db.tasks.liveMany());
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [_, setDrawer] = App.useDrawer();
+
+	const [selectedTasks, setSelectedTasks] = useState<Selection>(new Set());
+	console.debug("👉  selectedTasks:", selectedTasks);
 
 	useEffect(() => {
 		const syncTasks = async () => {
@@ -31,12 +32,20 @@ export function Tasks() {
 		<>
 			<App.Main.Header>
 				<h1 className="mr-auto">Tasks</h1>
-				<MenuTasksActions />
+				<MenuTasksActions
+					key={Array.from(selectedTasks).length}
+					selectedTasks={selectedTasks}
+				/>
 				<DialogNewTask />
 			</App.Main.Header>
 			<App.Main.Content>
 				<Table.ResizableContainer>
-					<Table.Root selectionMode="multiple" aria-label="Tasks table">
+					<Table.Root
+						selectedKeys={selectedTasks}
+						onSelectionChange={setSelectedTasks}
+						selectionMode="multiple"
+						aria-label="Tasks table"
+					>
 						<Table.Header>
 							<Table.Row>
 								<Table.Column isRowHeader sticky width={176}>
@@ -48,19 +57,16 @@ export function Tasks() {
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
-							{tasks.map((p) => {
+							{tasks.map((t) => {
 								return (
-									<Table.Row
-										onAction={() => setDrawer(<DrawerTaskDetails id={p.id} />)}
-										key={p.id}
-									>
+									<Table.Row href={`/tasks/${t.id}`} key={t.id} id={t.id}>
 										<Table.Cell>
 											<div className="flex gap-2 align-center">
-												<MenuTaskStatus id={p.id} status={p.status} />
-												{p.title}
+												<MenuTaskStatus id={t.id} status={t.status} />
+												{t.title}
 											</div>
 										</Table.Cell>
-										<Table.Cell right>{p.status}</Table.Cell>
+										<Table.Cell right>{t.status}</Table.Cell>
 									</Table.Row>
 								);
 							})}

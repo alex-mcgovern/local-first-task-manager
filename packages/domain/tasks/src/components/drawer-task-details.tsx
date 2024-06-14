@@ -19,6 +19,7 @@ import * as i18n from "@shared/i18n";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { parseAbsoluteToLocal } from "@internationalized/date";
 import { useLiveQuery } from "electric-sql/react";
+import { IconTaskStatus } from "./icon-task-status";
 
 const updateTaskSchema = TasksSchema.omit({
 	created_at: true,
@@ -56,6 +57,8 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 				resolver: zodResolver(updateTaskSchema),
 				values: task,
 			}}
+			// Ensure that if any value changes, the component re-renders
+			key={Object.values(task).join("-")}
 		>
 			<div className="flex gap-2">
 				<h3>{i18n.task_details}</h3>
@@ -76,9 +79,21 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 
 			<FormComboBox<task_statusType>
 				items={[
-					{ id: "to_do", name: i18n.status_to_do },
-					{ id: "in_progress", name: i18n.status_in_progress },
-					{ id: "completed", name: i18n.status_completed },
+					{
+						slotLeft: <IconTaskStatus status="to_do" />,
+						id: "to_do",
+						name: i18n.status_to_do,
+					},
+					{
+						slotLeft: <IconTaskStatus status="in_progress" />,
+						id: "in_progress",
+						name: i18n.status_in_progress,
+					},
+					{
+						slotLeft: <IconTaskStatus status="completed" />,
+						id: "completed",
+						name: i18n.status_completed,
+					},
 				]}
 				className="mb-4"
 				name="status"

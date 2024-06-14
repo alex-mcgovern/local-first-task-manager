@@ -1,6 +1,6 @@
 import { App } from "boondoggle";
-import { Route, Switch } from "wouter";
-import { Tasks } from "@domain/tasks";
+import { Route } from "wouter";
+import { TaskDetails, Tasks } from "@domain/tasks";
 import { SideNav } from "@shared/components";
 
 export default function MainApp() {
@@ -9,9 +9,12 @@ export default function MainApp() {
 			<App.Container>
 				<SideNav />
 				<App.Main.Root>
-					<Switch>
-						<Route component={Tasks} path="/" />
-					</Switch>
+					<Route component={Tasks} path="/" nest />
+					<Route path="/tasks/:id">
+						{({ id }) => {
+							return <TaskDetails id={id} />;
+						}}
+					</Route>
 				</App.Main.Root>
 			</App.Container>
 		</Route>

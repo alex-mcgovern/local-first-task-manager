@@ -5,23 +5,7 @@ import { faCircleHalfStroke } from "@fortawesome/pro-solid-svg-icons/faCircleHal
 import { Button, Icon, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
 import { exhaustiveSwitchGuard } from "@shared/utils";
 import * as i18n from "@shared/i18n";
-
-function getIcon(status: task_statusType) {
-	switch (status) {
-		case "completed": {
-			return faCheckCircle;
-		}
-		case "in_progress": {
-			return faCircleHalfStroke;
-		}
-		case "to_do": {
-			return faCircleDot;
-		}
-		default: {
-			return exhaustiveSwitchGuard(status);
-		}
-	}
-}
+import { IconTaskStatus } from "../components/icon-task-status";
 
 function getStr(status: task_statusType) {
 	switch (status) {
@@ -52,31 +36,32 @@ export function MenuTaskStatus({ status, id }: { status: task_statusType; id: st
 
 	return (
 		<Menu.Trigger>
-			<TooltipTrigger>
+			<TooltipTrigger delay={1000}>
 				<Button appearance="ghost" square size="sm">
-					<Icon color="grey" icon={getIcon(status)} />
+					<IconTaskStatus status={status} />
+					{/* <Icon color="grey" icon={getIcon(status)} /> */}
 				</Button>
-				<Tooltip placement="left">{getStr(status)}</Tooltip>
+				<Tooltip placement="bottom">{getStr(status)}</Tooltip>
 			</TooltipTrigger>
-			<Popover placement="bottom left">
+			<Popover placement="left top">
 				<Menu.DropdownMenu>
 					<Menu.Section>
 						<Menu.Item
-							icon={<Icon color="grey" icon={getIcon("to_do")} />}
+							icon={<IconTaskStatus status="to_do" />}
 							onAction={() => updateStatus(id, "to_do")}
 							id="to_do"
 						>
 							{i18n.status_to_do}
 						</Menu.Item>
 						<Menu.Item
-							icon={<Icon color="grey" icon={getIcon("in_progress")} />}
+							icon={<IconTaskStatus status="in_progress" />}
 							onAction={() => updateStatus(id, "in_progress")}
 							id="in_progress"
 						>
 							{i18n.status_in_progress}
 						</Menu.Item>
 						<Menu.Item
-							icon={<Icon color="grey" icon={getIcon("completed")} />}
+							icon={<IconTaskStatus status="completed" />}
 							onAction={() => updateStatus(id, "completed")}
 							id="completed"
 						>
