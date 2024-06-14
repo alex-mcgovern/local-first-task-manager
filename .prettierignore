@@ -1,0 +1,7 @@
+*.hbs
+.git
+docs
+node_modules
+tmp
+*.md
+packages/shared/i18n/src/index.ts

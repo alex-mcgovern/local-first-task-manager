@@ -1,0 +1,47 @@
+.full-height-message {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	flex-direction: column;
+	gap: var(--space-2);
+
+	text-align: center;
+	height: 100dvh;
+}
+
+.error-message-container {
+	height: calc(var(--main-content-height) - (var(--layout-focused-padding-y) * 2));
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: var(--space-2);
+
+	text-align: center;
+}
+
+.error-message {
+	.error-message-title {
+		color: var(--red-11);
+	}
+
+	.error-message-body {
+		color: var(--red-11);
+	}
+}
+
+.full-screen-loader {
+	--loader-size: var(--space-16);
+
+	position: absolute;
+	inset: 0;
+	z-index: 10;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: var(--slate-11);
+}

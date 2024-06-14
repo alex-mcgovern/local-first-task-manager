@@ -1,0 +1,22 @@
+{
+	"name": "@domain/tasks",
+	"sideEffects": [
+		"**/*.css"
+	],
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"type": "module",
+	"private": true,
+	"version": "0.0.0",
+	"dependencies": {
+		"@internationalized/date": "3.5.4",
+		"@fortawesome/free-brands-svg-icons": "6.5.1",
+		"@fortawesome/pro-solid-svg-icons": "6.5.1",
+		"@hookform/resolvers": "3.3.4",
+		"@shared/date": "*",
+		"@shared/i18n": "*",
+		"@shared/utils": "*",
+		"boondoggle": "^2.0.223"
+	}
+}
