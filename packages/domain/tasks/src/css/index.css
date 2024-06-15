@@ -1,12 +1,3 @@
-.payment-amount {
-	font-weight: var(--font-weight-medium);
-	color: var(--slate-11);
-
-	font-variant-numeric: tabular-nums;
-
-	color: var(--green-11);
-}
-
 .horizontal-field {
 	display: grid;
 	grid-template-columns: 1fr 2fr;

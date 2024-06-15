@@ -59,14 +59,13 @@ export function DialogNewTask() {
 				updated_at: date,
 			},
 		});
-		addTask;
 	};
 
 	return (
 		<Dialog.Trigger>
 			<Button>
 				<Icon icon={faPlus} />
-				{new_task}
+				{i18n.new_task}
 			</Button>
 			<Dialog.ModalOverlay isDismissable>
 				<Dialog.Modal>

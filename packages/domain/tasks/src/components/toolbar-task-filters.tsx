@@ -94,7 +94,7 @@ function FilterControlDueDate() {
 
 	return (
 		<FilterButton.Group isFilterApplied>
-			<FilterButton.Label>{due_date}</FilterButton.Label>
+			<FilterButton.Label>{i18n.due_date}</FilterButton.Label>
 			<Menu.Trigger>
 				<FilterButton.Button>{filterLabel}</FilterButton.Button>
 				<Popover>

@@ -12,6 +12,6 @@
 	"dependencies": {
 		"@internationalized/date": "3.5.2",
 		"@shared/utils": "*",
-		"zod": "3.22.4"
+		"zod": "3.21.1"
 	}
 }

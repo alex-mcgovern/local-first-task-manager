@@ -18,11 +18,11 @@
 		"@shared/i18n": "*",
 		"@shared/redux": "*",
 		"@shared/utils": "*",
-		"boondoggle": "2.0.226",
+		"boondoggle": "2.0.228",
 		"clsx": "2.1.1",
-		"react": "18.2.0",
+		"react": "18.3.1",
 		"react-redux": "9.1.2",
-		"zod": "3.22.4"
+		"zod": "3.21.1"
 	},
 	"devDependencies": {
 		"react-aria-components": "1.2.0"
