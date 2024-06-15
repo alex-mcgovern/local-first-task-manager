@@ -59,8 +59,7 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 
 	return (
 		<Form<UpdateTask>
-			// Ensure that if any value changes, the component re-renders
-			key={Object.values(task).join("-")}
+			key={Object.values(task).join("-")} // Ensure that if any value changes, the component re-renders
 			onSubmit={updateTask}
 			options={{
 				resolver: zodResolver(updateTaskSchema),

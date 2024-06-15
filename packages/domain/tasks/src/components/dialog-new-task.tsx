@@ -49,7 +49,7 @@ export function DialogNewTask() {
 		throw new Error("Electric client not found");
 	}
 
-	const addPayment = async (p: CreateTask) => {
+	const addTask = async (p: CreateTask) => {
 		const date = new Date(Date.now());
 		await db.tasks.create({
 			data: {
@@ -73,7 +73,7 @@ export function DialogNewTask() {
 						onError={(e) => {
 							console.error(e);
 						}}
-						onSubmit={addPayment}
+						onSubmit={addTask}
 						options={{
 							defaultValues: {
 								status: "to_do",
