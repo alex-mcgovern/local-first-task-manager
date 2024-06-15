@@ -1,10 +1,8 @@
 import type { PreselectedDatetimeRange } from "@shared/date";
 import type { task_statusType } from "@shared/electric-sql";
-
 import { faFilterList } from "@fortawesome/pro-solid-svg-icons/faFilterList";
 import { Button, Icon, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
 import { useDispatch, useSelector } from "react-redux";
-
 import * as i18n from "@shared/i18n";
 import {
 	clearFilterDueDate,

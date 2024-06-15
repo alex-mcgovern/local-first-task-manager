@@ -154,7 +154,7 @@ module.exports = {
 					"unknown",
 				],
 				"internal-pattern": ["domain/**", "lib/**", "components/**"],
-				"newlines-between": "always",
+				"newlines-between": "never",
 				order: "asc",
 				type: "natural",
 			},

@@ -1,19 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import taskManagementReducer from "./state/task-management";
 
-import { dbMiddleware } from "./middleware/db";
-import batchReducer from "./state/task-management";
-
-const rootReducer = combineReducers({ batchReducer });
+const rootReducer = combineReducers({ taskManagementReducer });
 
 export const store = configureStore({
-	middleware: (getDefaultMiddleware) => {
-		return getDefaultMiddleware().concat(dbMiddleware);
-	},
 	reducer: rootReducer,
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof rootReducer>;
 
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

@@ -1,5 +1,4 @@
 import type { task_statusType } from "@shared/electric-sql";
-
 import { faPlus } from "@fortawesome/pro-solid-svg-icons/faPlus";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -21,12 +20,9 @@ import {
 } from "boondoggle";
 import { genUUID } from "electric-sql/util";
 import { z } from "zod";
-
 import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
-
 import { IconTaskStatus } from "./icon-task-status";
-
 import "../css/index.css";
 
 const createTaskSchema = TasksSchema.omit({

@@ -1,16 +1,37 @@
 import type { Electric } from "../client";
-
 import { useEffect, useState } from "react";
-
 import { makeElectricContext } from "electric-sql/react";
 import { uniqueTabId } from "electric-sql/util";
 import { LIB_VERSION } from "electric-sql/version";
 import { ElectricDatabase, electrify } from "electric-sql/wa-sqlite";
-
 import { authToken } from "../../../../../src/auth";
 import { schema } from "../client";
 
 const { ElectricProvider, useElectric } = makeElectricContext<Electric>();
+
+export class ElectricClient {
+	client: Promise<Electric>;
+
+	constructor() {
+		const init = async () => {
+			const config = {
+				debug: import.meta.env.DEV,
+				url: import.meta.env.ELECTRIC_SERVICE,
+			};
+
+			const { tabId } = uniqueTabId();
+			const scopedDbName = `basic-${LIB_VERSION}-${tabId}.db`;
+
+			const conn = await ElectricDatabase.init(scopedDbName);
+			const client = await electrify(conn, schema, config);
+			await client.connect(authToken());
+
+			return client;
+		};
+
+		this.client = init();
+	}
+}
 
 function ElectricProviderComponent({ children }: { children: React.ReactNode }) {
 	const [electric, setElectric] = useState<Electric>();

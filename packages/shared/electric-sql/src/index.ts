@@ -1,2 +1,2 @@
 export * from "./client/index";
-export { ElectricProvider, useElectric } from "./components/electric-provider";
+export * from "./components/electric-provider";

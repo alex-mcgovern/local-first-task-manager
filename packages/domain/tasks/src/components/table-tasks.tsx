@@ -1,19 +1,15 @@
 import type { task_statusType as Status, Tasks as Task } from "@shared/electric-sql";
-
 import { useEffect } from "react";
-
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons/faCheckCircle";
 import { faExclamationCircle } from "@fortawesome/pro-solid-svg-icons/faExclamationCircle";
 import { Icon, Pill, Table } from "boondoggle";
 import clsx from "clsx";
 import { useLiveQuery } from "electric-sql/react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { formatDateTime } from "@shared/date";
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 import { selectSelectedTasks, selectWhere, setOrderBy, setSelectedTasks } from "@shared/redux";
-
 import { MenuTaskActions } from "./menu-task-actions";
 import { MenuTaskStatus } from "./menu-task-status";
 

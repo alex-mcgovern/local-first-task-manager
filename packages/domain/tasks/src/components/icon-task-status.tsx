@@ -1,12 +1,9 @@
 import type { ComponentProps } from "react";
-
 import type { task_statusType } from "@shared/electric-sql";
-
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons/faCheckCircle";
 import { faCircleDot } from "@fortawesome/pro-solid-svg-icons/faCircleDot";
 import { faCircleHalfStroke } from "@fortawesome/pro-solid-svg-icons/faCircleHalfStroke";
 import { Icon } from "boondoggle";
-
 import { exhaustiveSwitchGuard } from "@shared/utils";
 
 function getIcon(status: task_statusType) {

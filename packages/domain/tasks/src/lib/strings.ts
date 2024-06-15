@@ -1,5 +1,4 @@
 import type { task_statusType } from "@shared/electric-sql";
-
 import * as i18n from "@shared/i18n";
 import { exhaustiveSwitchGuard } from "@shared/utils";
 

@@ -1,7 +1,5 @@
 import type { z } from "zod";
-
 import type { task_statusType } from "@shared/electric-sql";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { parseAbsoluteToLocal } from "@internationalized/date";
 import {
@@ -20,10 +18,8 @@ import {
 	TextArea,
 } from "boondoggle";
 import { useLiveQuery } from "electric-sql/react";
-
 import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
-
 import { IconTaskStatus } from "./icon-task-status";
 
 const updateTaskSchema = TasksSchema.omit({

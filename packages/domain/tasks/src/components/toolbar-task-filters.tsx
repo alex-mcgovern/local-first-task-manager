@@ -1,8 +1,6 @@
 import type { PreselectedDatetimeRange } from "@shared/date";
-
 import { FilterButton, Menu, Popover } from "boondoggle";
 import { useDispatch, useSelector } from "react-redux";
-
 import * as i18n from "@shared/i18n";
 import {
 	clearFilterDueDate,
@@ -11,7 +9,6 @@ import {
 	selectStatusFilterList,
 } from "@shared/redux";
 import { exhaustiveSwitchGuard } from "@shared/utils";
-
 import { getStatusString } from "../lib/strings";
 import { MenuTaskFilterDueDate, MenuTaskFilterStatus } from "./menu-task-filters";
 

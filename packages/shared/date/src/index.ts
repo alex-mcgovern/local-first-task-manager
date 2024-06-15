@@ -1,8 +1,6 @@
 import type { CalendarDate } from "@internationalized/date";
-
 import { ZonedDateTime, fromDate, now, parseAbsolute } from "@internationalized/date";
 import { z } from "zod";
-
 import { exhaustiveSwitchGuard } from "@shared/utils";
 
 export const formatDate = (date?: string) => {

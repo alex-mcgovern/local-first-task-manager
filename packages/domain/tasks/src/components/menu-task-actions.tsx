@@ -1,6 +1,5 @@
 import { faEllipsis } from "@fortawesome/pro-solid-svg-icons/faEllipsis";
 import { Button, Icon, Menu, Popover } from "boondoggle";
-
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 

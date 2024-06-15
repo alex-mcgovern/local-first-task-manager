@@ -1,14 +1,10 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 // eslint-disable-next-line no-restricted-imports -- usually discourage direct import from `react-aria-components`, but this is necessary
 import type { Selection } from "react-aria-components";
-
 import type { PreselectedDatetimeRange } from "@shared/date";
 import type { TasksFindManyArgsSchema, task_statusType } from "@shared/electric-sql";
-
 import type { RootState } from "../store";
-
 import { createSlice } from "@reduxjs/toolkit";
-
 import { DateTimeRange } from "@shared/date";
 
 // Parameter for the `where` clause of the electric `tasks.findMany` query
@@ -97,19 +93,19 @@ export const {
 } = taskManagement.actions;
 
 export const selectSelectedTasks = (state: RootState) => {
-	return state.batchReducer.selectedTasks;
+	return state.taskManagementReducer.selectedTasks;
 };
 export const selectOrderBy = (state: RootState) => {
-	return state.batchReducer.orderBy;
+	return state.taskManagementReducer.orderBy;
 };
 export const selectWhere = (state: RootState) => {
-	return state.batchReducer.where;
+	return state.taskManagementReducer.where;
 };
 export const selectStatusFilterList = (state: RootState) => {
-	return state.batchReducer.statusFilterList;
+	return state.taskManagementReducer.statusFilterList;
 };
 export const selectDueDateFilter = (state: RootState) => {
-	return state.batchReducer.filterDueDate;
+	return state.taskManagementReducer.filterDueDate;
 };
 
 export default taskManagement.reducer;

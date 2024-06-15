@@ -1,10 +1,8 @@
 // eslint-disable-next-line no-restricted-imports -- usually discourage direct import from `react-aria-components`, but this is necessary
 import type { Selection } from "react-aria-components";
-
 import { faTrash } from "@fortawesome/pro-solid-svg-icons/faTrash";
 import { Button, Icon } from "boondoggle";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 import { selectSelectedTasks, setSelectedTasks } from "@shared/redux";

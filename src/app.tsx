@@ -1,8 +1,6 @@
 import { App } from "boondoggle";
 import { Route } from "wouter";
-
 import { SideNav } from "@shared/components";
-
 import { TaskDetails, Tasks } from "@domain/tasks";
 
 export default function MainApp() {

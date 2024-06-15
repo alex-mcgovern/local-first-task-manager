@@ -1,10 +1,7 @@
 import type { task_statusType } from "@shared/electric-sql";
-
 import { Button, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
-
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
-
 import { IconTaskStatus } from "../components/icon-task-status";
 import { getStatusString } from "../lib/strings";
 
@@ -56,7 +53,9 @@ export function MenuTaskStatus({ id, status }: { id: string; status: task_status
 									onAction={() => {
 										void updateStatus(id, t.id);
 									}}
-								/>
+								>
+									{t.label}
+								</Menu.Item>
 							);
 						})}
 					</Menu.Section>

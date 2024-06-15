@@ -1,5 +1,4 @@
 import { App } from "boondoggle";
-
 import { ButtonDeleteTasks } from "../components/delete-tasks";
 import { DialogNewTask } from "../components/dialog-new-task";
 import { MenuTaskFilters } from "../components/menu-task-filters";

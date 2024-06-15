@@ -1,5 +1,4 @@
 import { Loader } from "boondoggle";
-
 import "../css/index.css";
 
 export function FullScreenLoader() {
