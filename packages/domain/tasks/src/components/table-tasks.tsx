@@ -1,16 +1,21 @@
-import { selectSelectedTasks, setSelectedTasks, setOrderBy, selectWhere } from "@shared/redux";
-import { Icon, Pill, Table } from "boondoggle";
-import { useDispatch, useSelector } from "react-redux";
-import * as i18n from "@shared/i18n";
+import type { task_statusType as Status, Tasks as Task } from "@shared/electric-sql";
+
+import { useEffect } from "react";
+
+import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons/faCheckCircle";
 import { faExclamationCircle } from "@fortawesome/pro-solid-svg-icons/faExclamationCircle";
+import { Icon, Pill, Table } from "boondoggle";
+import clsx from "clsx";
+import { useLiveQuery } from "electric-sql/react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { formatDateTime } from "@shared/date";
+import { useElectric } from "@shared/electric-sql";
+import { due_date, tasks_table, title } from "@shared/i18n";
+import { selectSelectedTasks, selectWhere, setOrderBy, setSelectedTasks } from "@shared/redux";
+
 import { MenuTaskActions } from "./menu-task-actions";
 import { MenuTaskStatus } from "./menu-task-status";
-import { useElectric, type Tasks as Task, task_statusType as Status } from "@shared/electric-sql";
-import { useLiveQuery } from "electric-sql/react";
-import { useEffect } from "react";
-import clsx from "clsx";
-import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons/faCheckCircle";
 
 function DueDate({ date, status }: { date: Date; status: Status }) {
 	const isOverdue = status !== "completed" && date < new Date();
@@ -30,7 +35,11 @@ export function TableTasks() {
 	const selectedTasks = useSelector(selectSelectedTasks);
 	const dispatch = useDispatch();
 
-	const { db } = useElectric()!;
+	const { db } = useElectric() || {};
+	if (!db) {
+		throw new Error("Electric client not found");
+	}
+	// @ts-expect-error - ToDo: Figure out why TS shouting at me
 	const { results } = useLiveQuery(db.tasks.liveMany({ where }));
 	const tasks: Task[] = results ?? [];
 
@@ -43,16 +52,16 @@ export function TableTasks() {
 			await shape.synced;
 		};
 
-		syncTasks();
-	}, []);
+		void syncTasks();
+	}, [db.tasks]);
 
 	return (
 		<Table.ResizableContainer>
 			<Table.Root
-				selectedKeys={selectedTasks}
-				onSelectionChange={(v) => dispatch(setSelectedTasks(v))}
-				selectionMode="multiple"
-				aria-label={i18n.tasks_table}
+				aria-label={tasks_table}
+				onSelectionChange={(v) => {
+					return dispatch(setSelectedTasks(v));
+				}}
 				onSortChange={({ column, direction }) => {
 					switch (column) {
 						case "due_date": {
@@ -74,22 +83,24 @@ export function TableTasks() {
 						}
 					}
 				}}
+				selectedKeys={selectedTasks}
+				selectionMode="multiple"
 			>
 				<Table.Header>
 					<Table.Row>
 						<Table.Column allowsSorting id="title" isRowHeader sticky>
-							{i18n.title}
+							{title}
 						</Table.Column>
-						<Table.Column id="due_date" allowsSorting right sticky width="1fr">
-							{i18n.due_date}
+						<Table.Column allowsSorting id="due_date" right sticky width="1fr">
+							{due_date}
 						</Table.Column>
-						<Table.Column right width={48} sticky />
+						<Table.Column right sticky width={48} />
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
 					{tasks.map((t) => {
 						return (
-							<Table.Row href={`/tasks/${t.id}`} key={t.id} id={t.id}>
+							<Table.Row href={`/tasks/${t.id}`} id={t.id} key={t.id}>
 								<Table.Cell textValue={t.title}>
 									<div
 										className={clsx("flex gap-2 align-center", {
@@ -101,12 +112,12 @@ export function TableTasks() {
 									</div>
 								</Table.Cell>
 								<Table.Cell
-									textValue={t.due_date?.toISOString()}
-									right
 									className="color-gray"
+									right
+									textValue={t.due_date?.toISOString()}
 								>
 									{t.due_date ? (
-										<DueDate status={t.status} date={t.due_date} />
+										<DueDate date={t.due_date} status={t.status} />
 									) : (
 										"—"
 									)}

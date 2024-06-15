@@ -1,4 +1,7 @@
-import { TasksSchema, useElectric, task_statusType } from "@shared/electric-sql";
+import type { task_statusType } from "@shared/electric-sql";
+
+import { faPlus } from "@fortawesome/pro-solid-svg-icons/faPlus";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	Button,
 	ComboBoxButton,
@@ -18,18 +21,29 @@ import {
 } from "boondoggle";
 import { genUUID } from "electric-sql/util";
 import { z } from "zod";
-import * as i18n from "@shared/i18n";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { faPlus } from "@fortawesome/pro-solid-svg-icons/faPlus";
-import "../css/index.css";
+
+import { TasksSchema, useElectric } from "@shared/electric-sql";
+import {
+	description,
+	due_date,
+	new_task,
+	status,
+	status_completed,
+	status_in_progress,
+	status_to_do,
+	title,
+} from "@shared/i18n";
+
 import { IconTaskStatus } from "./icon-task-status";
+
+import "../css/index.css";
 
 const createTaskSchema = TasksSchema.omit({
 	created_at: true,
-	updated_at: true,
-	id: true,
-	due_date: true,
 	description: true,
+	due_date: true,
+	id: true,
+	updated_at: true,
 }).merge(
 	z.object({
 		description: z.string().optional(),
@@ -39,15 +53,18 @@ const createTaskSchema = TasksSchema.omit({
 type CreateTask = z.infer<typeof createTaskSchema>;
 
 export function DialogNewTask() {
-	const { db } = useElectric()!;
+	const { db } = useElectric() || {};
+	if (!db) {
+		throw new Error("Electric client not found");
+	}
 
 	const addPayment = async (p: CreateTask) => {
 		const date = new Date(Date.now());
 		await db.tasks.create({
 			data: {
 				...p,
-				id: genUUID(),
 				created_at: date,
+				id: genUUID(),
 				updated_at: date,
 			},
 		});
@@ -57,44 +74,44 @@ export function DialogNewTask() {
 		<Dialog.Trigger>
 			<Button>
 				<Icon icon={faPlus} />
-				{i18n.new_task}
+				{new_task}
 			</Button>
 			<Dialog.ModalOverlay isDismissable>
 				<Dialog.Modal>
 					<Form<CreateTask>
+						onError={(e) => {
+							console.error(e);
+						}}
 						onSubmit={addPayment}
 						options={{
-							resolver: zodResolver(createTaskSchema),
 							defaultValues: {
 								status: "to_do",
 							},
-						}}
-						onError={(e) => {
-							console.error(e);
+							resolver: zodResolver(createTaskSchema),
 						}}
 					>
 						<Dialog.Root>
 							<Dialog.Header>
-								<Dialog.Title>{i18n.new_task}</Dialog.Title>
+								<Dialog.Title>{new_task}</Dialog.Title>
 								<Dialog.CloseButton />
 							</Dialog.Header>
 							<Dialog.Content>
 								<FormTextField autoFocus className="mb-4" name="title">
-									<Label>{i18n.title}</Label>
+									<Label>{title}</Label>
 									<Input />
 								</FormTextField>
 
 								<FormTextField className="mb-4" name="description">
-									<Label>{i18n.description}</Label>
+									<Label>{description}</Label>
 									<TextArea />
 								</FormTextField>
 
 								<FormDatePicker
 									className="mb-4"
-									name="due_date"
 									granularity="minute"
+									name="due_date"
 								>
-									<Label>{i18n.due_date}</Label>
+									<Label>{due_date}</Label>
 									<Group>
 										<DateInput unstyled />
 										<DatePickerButton />
@@ -104,27 +121,27 @@ export function DialogNewTask() {
 								<hr />
 
 								<FormComboBox<task_statusType>
+									className="mb-4"
 									items={[
 										{
-											slotLeft: <IconTaskStatus status="to_do" />,
 											id: "to_do",
-											name: i18n.status_to_do,
+											name: status_to_do,
+											slotLeft: <IconTaskStatus status="to_do" />,
 										},
 										{
-											slotLeft: <IconTaskStatus status="in_progress" />,
 											id: "in_progress",
-											name: i18n.status_in_progress,
+											name: status_in_progress,
+											slotLeft: <IconTaskStatus status="in_progress" />,
 										},
 										{
-											slotLeft: <IconTaskStatus status="completed" />,
 											id: "completed",
-											name: i18n.status_completed,
+											name: status_completed,
+											slotLeft: <IconTaskStatus status="completed" />,
 										},
 									]}
-									className="mb-4"
 									name="status"
 								>
-									<Label>{i18n.status}</Label>
+									<Label>{status}</Label>
 									<Group>
 										<ComboBoxInput unstyled />
 										<ComboBoxButton />

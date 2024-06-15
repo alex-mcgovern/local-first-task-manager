@@ -1,16 +1,19 @@
+import type { PreselectedDatetimeRange } from "@shared/date";
+
+import { FilterButton, Menu, Popover } from "boondoggle";
+import { useDispatch, useSelector } from "react-redux";
+
+import { date_range_last_7_days, date_range_last_30_days, date_range_last_90_days, date_range_last_day, date_range_last_hour, date_range_next_7_days, date_range_next_30_days, date_range_next_90_days, date_range_next_day, date_range_next_hour, due_date, status } from "@shared/i18n";
 import {
 	clearFilterDueDate,
 	clearFilterTaskStatus,
 	selectDueDateFilter,
 	selectStatusFilterList,
 } from "@shared/redux";
-import { FilterButton, Menu, Popover } from "boondoggle";
-import { useSelector, useDispatch } from "react-redux";
-import * as i18n from "@shared/i18n";
+import { exhaustiveSwitchGuard } from "@shared/utils";
+
 import { getStatusString } from "../lib/strings";
 import { MenuTaskFilterDueDate, MenuTaskFilterStatus } from "./menu-task-filters";
-import { PreselectedDatetimeRange } from "@shared/date";
-import { exhaustiveSwitchGuard } from "@shared/utils";
 
 function FilterControlTaskStatus() {
 	const filters = useSelector(selectStatusFilterList);
@@ -24,7 +27,7 @@ function FilterControlTaskStatus() {
 
 	return (
 		<FilterButton.Group isFilterApplied>
-			<FilterButton.Label>{i18n.status}</FilterButton.Label>
+			<FilterButton.Label>{status}</FilterButton.Label>
 			<Menu.Trigger>
 				<FilterButton.Button>{filterLabel}</FilterButton.Button>
 				<Popover>
@@ -44,34 +47,34 @@ function FilterControlTaskStatus() {
 const getDateRangeString = (date_range: PreselectedDatetimeRange) => {
 	switch (date_range) {
 		case "last_30_days": {
-			return i18n.date_range_last_30_days;
+			return date_range_last_30_days;
 		}
 		case "last_7_days": {
-			return i18n.date_range_last_7_days;
+			return date_range_last_7_days;
 		}
 		case "last_90_days": {
-			return i18n.date_range_last_90_days;
+			return date_range_last_90_days;
 		}
 		case "last_day": {
-			return i18n.date_range_last_day;
+			return date_range_last_day;
 		}
 		case "last_hour": {
-			return i18n.date_range_last_hour;
+			return date_range_last_hour;
 		}
 		case "next_30_days": {
-			return i18n.date_range_next_30_days;
+			return date_range_next_30_days;
 		}
 		case "next_7_days": {
-			return i18n.date_range_next_7_days;
+			return date_range_next_7_days;
 		}
 		case "next_90_days": {
-			return i18n.date_range_next_90_days;
+			return date_range_next_90_days;
 		}
 		case "next_day": {
-			return i18n.date_range_next_day;
+			return date_range_next_day;
 		}
 		case "next_hour": {
-			return i18n.date_range_next_hour;
+			return date_range_next_hour;
 		}
 		default: {
 			return exhaustiveSwitchGuard(date_range);
@@ -91,7 +94,7 @@ function FilterControlDueDate() {
 
 	return (
 		<FilterButton.Group isFilterApplied>
-			<FilterButton.Label>{i18n.due_date}</FilterButton.Label>
+			<FilterButton.Label>{due_date}</FilterButton.Label>
 			<Menu.Trigger>
 				<FilterButton.Button>{filterLabel}</FilterButton.Button>
 				<Popover>

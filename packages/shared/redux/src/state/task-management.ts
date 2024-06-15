@@ -1,9 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+// eslint-disable-next-line no-restricted-imports -- usually discourage direct import from `react-aria-components`, but this is necessary
 import type { Selection } from "react-aria-components";
-import { TasksFindManyArgsSchema, task_statusType } from "@shared/electric-sql";
-import { DateTimeRange, PreselectedDatetimeRange } from "@shared/date";
+
+import type { PreselectedDatetimeRange } from "@shared/date";
+import type { TasksFindManyArgsSchema, task_statusType } from "@shared/electric-sql";
+
+import type { RootState } from "../store";
+
+import { createSlice } from "@reduxjs/toolkit";
+
+import { DateTimeRange } from "@shared/date";
 
 // Parameter for the `where` clause of the electric `tasks.findMany` query
 type Where = Zod.infer<typeof TasksFindManyArgsSchema>["where"];
@@ -11,56 +17,26 @@ type Where = Zod.infer<typeof TasksFindManyArgsSchema>["where"];
 // Parameter for the `orderBy` clause of the electric `tasks.findMany` query
 type OrderBy = Zod.infer<typeof TasksFindManyArgsSchema>["orderBy"];
 
-interface State {
-	selectedTasks: Selection;
-	orderBy: OrderBy;
-	where: Where;
-	statusFilterList: task_statusType[];
+type State = {
 	filterDueDate: PreselectedDatetimeRange | undefined;
-}
+	orderBy: OrderBy;
+	selectedTasks: Selection;
+	statusFilterList: task_statusType[];
+	where: Where;
+};
 
 const initialState: State = {
-	selectedTasks: new Set(),
-	orderBy: { created_at: "asc" },
-	where: {},
-	statusFilterList: [],
 	filterDueDate: undefined,
+	orderBy: { created_at: "asc" },
+	selectedTasks: new Set(),
+	statusFilterList: [],
+	where: {},
 };
 
 export const taskManagement = createSlice({
-	name: "taskManagement",
 	initialState,
+	name: "taskManagement",
 	reducers: {
-		setOrderBy: (state, action: PayloadAction<OrderBy>) => {
-			state.orderBy = action.payload;
-		},
-		filterByStatus: (state, action: PayloadAction<task_statusType>) => {
-			// For simplicity, we'll track the status filter list
-			// directly in state. If the status is already in the list,
-			// remove it, otherwise, add it
-
-			if (state.statusFilterList.includes(action.payload)) {
-				state.statusFilterList = state.statusFilterList.filter((s) => s !== action.payload);
-			} else {
-				state.statusFilterList.push(action.payload);
-			}
-
-			// Update the `where` clause tracked in state
-
-			if (state.where?.status && state.statusFilterList.length === 0) {
-				delete state.where.status;
-			} else if (state.where) {
-				state.where.status = { in: state.statusFilterList };
-			}
-		},
-		filterByDueDate: (state, action: PayloadAction<PreselectedDatetimeRange>) => {
-			state.filterDueDate = action.payload;
-			const { from, to } = new DateTimeRange(action.payload).range;
-
-			if (state.where) {
-				state.where.due_date = { gte: from.toDate(), lte: to.toDate() };
-			}
-		},
 		clearFilterDueDate: (state) => {
 			state.filterDueDate = undefined;
 			if (state.where?.due_date) {
@@ -73,6 +49,38 @@ export const taskManagement = createSlice({
 				delete state.where.status;
 			}
 		},
+		filterByDueDate: (state, action: PayloadAction<PreselectedDatetimeRange>) => {
+			state.filterDueDate = action.payload;
+			const { from, to } = new DateTimeRange(action.payload).range;
+
+			if (state.where) {
+				state.where.due_date = { gte: from.toDate(), lte: to.toDate() };
+			}
+		},
+		filterByStatus: (state, action: PayloadAction<task_statusType>) => {
+			// For simplicity, we'll track the status filter list
+			// directly in state. If the status is already in the list,
+			// remove it, otherwise, add it
+
+			if (state.statusFilterList.includes(action.payload)) {
+				state.statusFilterList = state.statusFilterList.filter((s) => {
+					return s !== action.payload;
+				});
+			} else {
+				state.statusFilterList.push(action.payload);
+			}
+
+			// Update the `where` clause tracked in state
+
+			if (state.where?.status && state.statusFilterList.length === 0) {
+				delete state.where.status;
+			} else if (state.where) {
+				state.where.status = { in: state.statusFilterList };
+			}
+		},
+		setOrderBy: (state, action: PayloadAction<OrderBy>) => {
+			state.orderBy = action.payload;
+		},
 		setSelectedTasks: (state, action: PayloadAction<Selection>) => {
 			state.selectedTasks = action.payload;
 		},
@@ -80,19 +88,29 @@ export const taskManagement = createSlice({
 });
 
 export const {
-	setSelectedTasks,
-	setOrderBy,
-	filterByStatus,
+	clearFilterDueDate,
 	clearFilterTaskStatus,
 	filterByDueDate,
-	clearFilterDueDate,
+	filterByStatus,
+	setOrderBy,
+	setSelectedTasks,
 } = taskManagement.actions;
 
-export const selectSelectedTasks = (state: RootState) => state.batchReducer.selectedTasks;
-export const selectOrderBy = (state: RootState) => state.batchReducer.orderBy;
-export const selectWhere = (state: RootState) => state.batchReducer.where;
-export const selectStatusFilterList = (state: RootState) => state.batchReducer.statusFilterList;
-export const selectDueDateFilter = (state: RootState) => state.batchReducer.filterDueDate;
+export const selectSelectedTasks = (state: RootState) => {
+	return state.batchReducer.selectedTasks;
+};
+export const selectOrderBy = (state: RootState) => {
+	return state.batchReducer.orderBy;
+};
+export const selectWhere = (state: RootState) => {
+	return state.batchReducer.where;
+};
+export const selectStatusFilterList = (state: RootState) => {
+	return state.batchReducer.statusFilterList;
+};
+export const selectDueDateFilter = (state: RootState) => {
+	return state.batchReducer.filterDueDate;
+};
 
 export default taskManagement.reducer;
 

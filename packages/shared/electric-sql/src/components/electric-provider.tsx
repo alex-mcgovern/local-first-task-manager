@@ -1,58 +1,56 @@
-import { useEffect, useState } from 'react'
+import type { Electric } from "../client";
 
-import { LIB_VERSION } from 'electric-sql/version'
-import { makeElectricContext } from 'electric-sql/react'
-import { uniqueTabId } from 'electric-sql/util'
-import { ElectricDatabase, electrify } from 'electric-sql/wa-sqlite'
+import { useEffect, useState } from "react";
 
-import { authToken } from '../../../../../src/auth'
-import { Electric, schema } from '../client'
+import { makeElectricContext } from "electric-sql/react";
+import { uniqueTabId } from "electric-sql/util";
+import { LIB_VERSION } from "electric-sql/version";
+import { ElectricDatabase, electrify } from "electric-sql/wa-sqlite";
 
-const { ElectricProvider, useElectric } = makeElectricContext<Electric>()
+import { authToken } from "../../../../../src/auth";
+import { schema } from "../client";
 
-const ElectricProviderComponent = ({
-  children,
-}: {
-  children: React.ReactNode
-}) => {
-  const [electric, setElectric] = useState<Electric>()
+const { ElectricProvider, useElectric } = makeElectricContext<Electric>();
 
-  useEffect(() => {
-    let isMounted = true
+function ElectricProviderComponent({ children }: { children: React.ReactNode }) {
+	const [electric, setElectric] = useState<Electric>();
 
-    const init = async () => {
-      const config = {
-        debug: import.meta.env.DEV,
-        url: import.meta.env.ELECTRIC_SERVICE,
-      }
+	useEffect(() => {
+		let isMounted = true;
 
-      const { tabId } = uniqueTabId()
-      const scopedDbName = `basic-${LIB_VERSION}-${tabId}.db`
+		const init = async () => {
+			const config = {
+				debug: import.meta.env.DEV,
+				url: import.meta.env.ELECTRIC_SERVICE,
+			};
 
-      const conn = await ElectricDatabase.init(scopedDbName)
-      const client = await electrify(conn, schema, config)
-      await client.connect(authToken())
+			const { tabId } = uniqueTabId();
+			const scopedDbName = `basic-${LIB_VERSION}-${tabId}.db`;
 
-      if (!isMounted) {
-        return
-      }
+			const conn = await ElectricDatabase.init(scopedDbName);
+			const client = await electrify(conn, schema, config);
+			await client.connect(authToken());
 
-      setElectric(client)
-    }
+			if (!isMounted) {
+				return;
+			}
 
-    init()
+			setElectric(client);
+		};
 
-    return () => {
-      isMounted = false
-    }
-  }, [])
+		void init();
 
-  if (electric === undefined) {
-    return null
-  }
+		return () => {
+			isMounted = false;
+		};
+	}, []);
 
-  return <ElectricProvider db={electric}>{children}</ElectricProvider>
+	if (electric === undefined) {
+		return null;
+	}
+
+	return <ElectricProvider db={electric}>{children}</ElectricProvider>;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export { ElectricProviderComponent as ElectricProvider, useElectric }
+// eslint-disable-next-line react-refresh/only-export-components -- This is the recommended approach from electric-sql, also it doesn't change often, so fast refresh in dev isn't an issue
+export { ElectricProviderComponent as ElectricProvider, useElectric };

@@ -2,15 +2,20 @@ import { StrictMode } from "react";
 
 import { RouterProvider, Toaster } from "boondoggle";
 import ReactDOM from "react-dom/client";
+import { Provider as ReduxProvider } from "react-redux";
 import { navigate } from "wouter/use-browser-location";
 
-import App from "./app.tsx";
 import { ElectricProvider } from "@shared/electric-sql";
-import { Provider as ReduxProvider } from "react-redux";
 import { store } from "@shared/redux";
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-ReactDOM.createRoot(document.getElementById("root")!).render(
+import App from "./app.tsx";
+
+const root = document.getElementById("root");
+if (!root) {
+	throw new Error("Root element not found");
+}
+
+ReactDOM.createRoot(root).render(
 	<StrictMode>
 		<ElectricProvider>
 			{/* <ErrorBoundary fallback={ErrorMessage}> */}

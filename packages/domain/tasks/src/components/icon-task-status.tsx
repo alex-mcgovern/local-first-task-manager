@@ -1,9 +1,12 @@
-import { Icon } from "boondoggle";
-import { ComponentProps } from "react";
-import { task_statusType } from "@shared/electric-sql";
-import { faCircleDot } from "@fortawesome/pro-solid-svg-icons/faCircleDot";
+import type { ComponentProps } from "react";
+
+import type { task_statusType } from "@shared/electric-sql";
+
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons/faCheckCircle";
+import { faCircleDot } from "@fortawesome/pro-solid-svg-icons/faCircleDot";
 import { faCircleHalfStroke } from "@fortawesome/pro-solid-svg-icons/faCircleHalfStroke";
+import { Icon } from "boondoggle";
+
 import { exhaustiveSwitchGuard } from "@shared/utils";
 
 function getIcon(status: task_statusType) {
@@ -23,10 +26,10 @@ function getIcon(status: task_statusType) {
 	}
 }
 
-export const IconTaskStatus = ({
-	status,
+export function IconTaskStatus({
 	color = "grey",
+	status,
 	...props
-}: { status: task_statusType } & Omit<ComponentProps<typeof Icon>, "icon">) => {
+}: { status: task_statusType } & Omit<ComponentProps<typeof Icon>, "icon">) {
 	return <Icon {...props} color={color} icon={getIcon(status)} />;
-};
+}

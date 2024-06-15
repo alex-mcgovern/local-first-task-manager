@@ -1,46 +1,64 @@
-import { Button, Icon, Menu, Popover } from "boondoggle";
-import { faTrash } from "@fortawesome/pro-solid-svg-icons/faTrash";
-import * as i18n from "@shared/i18n";
-import { useElectric } from "@shared/electric-sql";
+// eslint-disable-next-line no-restricted-imports -- usually discourage direct import from `react-aria-components`, but this is necessary
 import type { Selection } from "react-aria-components";
+
+import { faTrash } from "@fortawesome/pro-solid-svg-icons/faTrash";
+import { Button, Icon } from "boondoggle";
 import { useDispatch, useSelector } from "react-redux";
+
+import { useElectric } from "@shared/electric-sql";
+import { delete_all, delete_selected } from "@shared/i18n";
 import { selectSelectedTasks, setSelectedTasks } from "@shared/redux";
 
 function getDeleteLabel(selectedTasks: Selection) {
 	if (selectedTasks === "all") {
-		return i18n.delete_all;
+		return delete_all;
 	}
-	return `${i18n.delete_selected} (${selectedTasks.size})`;
+	return `${delete_selected} (${selectedTasks.size})`;
 }
 
 export function ButtonDeleteTasks() {
-	const selectedTasks = useSelector(selectSelectedTasks);
+	const selected = useSelector(selectSelectedTasks);
 	const dispatch = useDispatch();
 
-	const { db } = useElectric()!;
+	const { db } = useElectric() || {};
+	if (!db) {
+		throw new Error("Electric client not found");
+	}
 
 	const deleteSelectedTasks = async () => {
-		if (selectedTasks === "all") {
+		if (selected === "all") {
 			await db.tasks.deleteMany();
 		} else {
 			await db.tasks.deleteMany({
-				where: { id: { in: Array.from(selectedTasks).map((k) => k.toString()) } },
+				where: {
+					id: {
+						in: Array.from(selected).map((k) => {
+							return k.toString();
+						}),
+					},
+				},
 			});
 		}
 		// Clear the selection after deleting the tasks.
 		dispatch(setSelectedTasks(new Set()));
 	};
 
-	const hasSelection: boolean = selectedTasks === "all" || selectedTasks.size > 0;
+	const hasSelection: boolean = selected === "all" || selected.size > 0;
 
 	if (!hasSelection) {
 		return null;
 	}
 
 	return (
-		<Button color="red" appearance="secondary" onPress={deleteSelectedTasks}>
+		<Button
+			appearance="secondary"
+			color="red"
+			onPress={() => {
+				return void deleteSelectedTasks();
+			}}
+		>
 			<Icon icon={faTrash} />
-			{getDeleteLabel(selectedTasks)}
+			{getDeleteLabel(selected)}
 		</Button>
 	);
 }

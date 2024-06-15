@@ -1,7 +1,9 @@
 import { App } from "boondoggle";
 import { Route } from "wouter";
-import { TaskDetails, Tasks } from "@domain/tasks";
+
 import { SideNav } from "@shared/components";
+
+import { TaskDetails, Tasks } from "@domain/tasks";
 
 export default function MainApp() {
 	return (
@@ -9,7 +11,7 @@ export default function MainApp() {
 			<App.Container>
 				<SideNav />
 				<App.Main.Root>
-					<Route component={Tasks} path="/" nest />
+					<Route component={Tasks} nest path="/" />
 					<Route path="/tasks/:id">
 						{({ id }) => {
 							return <TaskDetails id={id} />;

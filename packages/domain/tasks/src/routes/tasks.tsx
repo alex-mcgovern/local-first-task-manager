@@ -1,9 +1,10 @@
 import { App } from "boondoggle";
+
+import { ButtonDeleteTasks } from "../components/delete-tasks";
 import { DialogNewTask } from "../components/dialog-new-task";
 import { MenuTaskFilters } from "../components/menu-task-filters";
-import { ButtonDeleteTasks } from "../components/delete-tasks";
-import { ToolbarTaskFilters } from "../components/toolbar-task-filters";
 import { TableTasks } from "../components/table-tasks";
+import { ToolbarTaskFilters } from "../components/toolbar-task-filters";
 
 export function Tasks() {
 	return (

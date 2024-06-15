@@ -1,6 +1,6 @@
 import type { CalendarDate } from "@internationalized/date";
 
-import { ZonedDateTime, now, parseAbsolute, fromDate } from "@internationalized/date";
+import { ZonedDateTime, fromDate, now, parseAbsolute } from "@internationalized/date";
 import { z } from "zod";
 
 import { exhaustiveSwitchGuard } from "@shared/utils";
@@ -50,10 +50,10 @@ export type PreselectedDatetimeRange =
 	| "next_hour";
 
 type RangeInput =
+	| DateRange
 	| ISOStringDatetimeRange
 	| PreselectedDatetimeRange
-	| ZonedDateTimeRange
-	| DateRange;
+	| ZonedDateTimeRange;
 
 const PRESELECTED_RANGES: PreselectedDatetimeRange[] = [
 	"last_7_days",
@@ -85,8 +85,8 @@ export class DateTimeRange {
 		}
 	}
 
-	private isInputPreselected(input: RangeInput): input is PreselectedDatetimeRange {
-		return typeof input === "string" && PRESELECTED_RANGES.includes(input);
+	private isInputDate(input: RangeInput): input is DateRange {
+		return typeof input === "object" && input.from instanceof Date && input.to instanceof Date;
 	}
 
 	private isInputISO(input: RangeInput): input is ISOStringDatetimeRange {
@@ -97,8 +97,8 @@ export class DateTimeRange {
 		);
 	}
 
-	private isInputDate(input: RangeInput): input is DateRange {
-		return typeof input === "object" && input.from instanceof Date && input.to instanceof Date;
+	private isInputPreselected(input: RangeInput): input is PreselectedDatetimeRange {
+		return typeof input === "string" && PRESELECTED_RANGES.includes(input);
 	}
 
 	private isInputZoned(input: RangeInput): input is ZonedDateTimeRange {
@@ -109,17 +109,17 @@ export class DateTimeRange {
 		);
 	}
 
-	private parseISO(input: ISOStringDatetimeRange): ZonedDateTimeRange {
-		return {
-			from: parseAbsolute(input.from, "UTC"),
-			to: parseAbsolute(input.to, "UTC"),
-		};
-	}
-
 	private parseDate(input: DateRange): ZonedDateTimeRange {
 		return {
 			from: fromDate(input.from, "UTC"),
 			to: fromDate(input.to, "UTC"),
+		};
+	}
+
+	private parseISO(input: ISOStringDatetimeRange): ZonedDateTimeRange {
+		return {
+			from: parseAbsolute(input.from, "UTC"),
+			to: parseAbsolute(input.to, "UTC"),
 		};
 	}
 
