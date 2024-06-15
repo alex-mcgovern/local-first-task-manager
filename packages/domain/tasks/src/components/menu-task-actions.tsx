@@ -2,7 +2,7 @@ import { faEllipsis } from "@fortawesome/pro-solid-svg-icons/faEllipsis";
 import { Button, Icon, Menu, Popover } from "boondoggle";
 
 import { useElectric } from "@shared/electric-sql";
-import { delete_task } from "@shared/i18n";
+import * as i18n from "@shared/i18n";
 
 export function MenuTaskActions({ id }: { id: string }) {
 	const { db } = useElectric() || {};
@@ -28,7 +28,7 @@ export function MenuTaskActions({ id }: { id: string }) {
 								return void deleteSelectedTasks();
 							}}
 						>
-							{delete_task}
+							{i18n.delete_task}
 						</Menu.Item>
 					</Menu.Section>
 				</Menu.DropdownMenu>

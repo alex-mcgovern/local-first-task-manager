@@ -3,7 +3,7 @@ import type { task_statusType } from "@shared/electric-sql";
 import { Button, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
 
 import { useElectric } from "@shared/electric-sql";
-import { status_completed, status_in_progress, status_to_do } from "@shared/i18n";
+import * as i18n from "@shared/i18n";
 
 import { IconTaskStatus } from "../components/icon-task-status";
 import { getStatusString } from "../lib/strings";
@@ -11,15 +11,15 @@ import { getStatusString } from "../lib/strings";
 const STATUS_ITEMS: { id: task_statusType; label: string }[] = [
 	{
 		id: "to_do",
-		label: status_to_do,
+		label: i18n.status_to_do,
 	},
 	{
 		id: "in_progress",
-		label: status_in_progress,
+		label: i18n.status_in_progress,
 	},
 	{
 		id: "completed",
-		label: status_completed,
+		label: i18n.status_completed,
 	},
 ];
 

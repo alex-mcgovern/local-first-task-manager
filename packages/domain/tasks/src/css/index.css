@@ -7,7 +7,6 @@
 	color: var(--green-11);
 }
 
-
 .horizontal-field {
 	display: grid;
 	grid-template-columns: 1fr 2fr;

@@ -97,7 +97,7 @@ module.exports = {
 		"import/no-cycle": "error",
 		"import/no-duplicates": ["error", { considerQueryString: true }],
 		"import/no-extraneous-dependencies": "error",
-		"import/no-namespace": ["error", { ignore: ["*.ext"] }],
+		"import/no-namespace": ["error", { ignore: ["@shared/i18n"] }],
 		"import/no-relative-packages": "error",
 		"no-console": ["error", { allow: ["warn", "error", "info"] }],
 		"no-empty-function": "off",

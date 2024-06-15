@@ -10,6 +10,7 @@
 	"type": "module",
 	"main": "./src/index.ts",
 	"dependencies": {
+		"zod": "3.22.4",
 		"electric-sql": "0.12.0",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",

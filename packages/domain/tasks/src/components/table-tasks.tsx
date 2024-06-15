@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { formatDateTime } from "@shared/date";
 import { useElectric } from "@shared/electric-sql";
-import { due_date, tasks_table, title } from "@shared/i18n";
+import * as i18n from "@shared/i18n";
 import { selectSelectedTasks, selectWhere, setOrderBy, setSelectedTasks } from "@shared/redux";
 
 import { MenuTaskActions } from "./menu-task-actions";
@@ -58,7 +58,7 @@ export function TableTasks() {
 	return (
 		<Table.ResizableContainer>
 			<Table.Root
-				aria-label={tasks_table}
+				aria-label={i18n.tasks_table}
 				onSelectionChange={(v) => {
 					return dispatch(setSelectedTasks(v));
 				}}
@@ -89,10 +89,10 @@ export function TableTasks() {
 				<Table.Header>
 					<Table.Row>
 						<Table.Column allowsSorting id="title" isRowHeader sticky>
-							{title}
+							{i18n.title}
 						</Table.Column>
 						<Table.Column allowsSorting id="due_date" right sticky width="1fr">
-							{due_date}
+							{i18n.due_date}
 						</Table.Column>
 						<Table.Column right sticky width={48} />
 					</Table.Row>

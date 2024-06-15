@@ -23,16 +23,7 @@ import { genUUID } from "electric-sql/util";
 import { z } from "zod";
 
 import { TasksSchema, useElectric } from "@shared/electric-sql";
-import {
-	description,
-	due_date,
-	new_task,
-	status,
-	status_completed,
-	status_in_progress,
-	status_to_do,
-	title,
-} from "@shared/i18n";
+import * as i18n from "@shared/i18n";
 
 import { IconTaskStatus } from "./icon-task-status";
 
@@ -68,6 +59,7 @@ export function DialogNewTask() {
 				updated_at: date,
 			},
 		});
+		addTask;
 	};
 
 	return (
@@ -92,17 +84,17 @@ export function DialogNewTask() {
 					>
 						<Dialog.Root>
 							<Dialog.Header>
-								<Dialog.Title>{new_task}</Dialog.Title>
+								<Dialog.Title>{i18n.new_task}</Dialog.Title>
 								<Dialog.CloseButton />
 							</Dialog.Header>
 							<Dialog.Content>
 								<FormTextField autoFocus className="mb-4" name="title">
-									<Label>{title}</Label>
+									<Label>{i18n.title}</Label>
 									<Input />
 								</FormTextField>
 
 								<FormTextField className="mb-4" name="description">
-									<Label>{description}</Label>
+									<Label>{i18n.description}</Label>
 									<TextArea />
 								</FormTextField>
 
@@ -111,7 +103,7 @@ export function DialogNewTask() {
 									granularity="minute"
 									name="due_date"
 								>
-									<Label>{due_date}</Label>
+									<Label>{i18n.due_date}</Label>
 									<Group>
 										<DateInput unstyled />
 										<DatePickerButton />
@@ -125,23 +117,23 @@ export function DialogNewTask() {
 									items={[
 										{
 											id: "to_do",
-											name: status_to_do,
+											name: i18n.status_to_do,
 											slotLeft: <IconTaskStatus status="to_do" />,
 										},
 										{
 											id: "in_progress",
-											name: status_in_progress,
+											name: i18n.status_in_progress,
 											slotLeft: <IconTaskStatus status="in_progress" />,
 										},
 										{
 											id: "completed",
-											name: status_completed,
+											name: i18n.status_completed,
 											slotLeft: <IconTaskStatus status="completed" />,
 										},
 									]}
 									name="status"
 								>
-									<Label>{status}</Label>
+									<Label>{i18n.status}</Label>
 									<Group>
 										<ComboBoxInput unstyled />
 										<ComboBoxButton />

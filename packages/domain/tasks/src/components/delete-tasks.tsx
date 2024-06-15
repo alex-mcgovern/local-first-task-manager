@@ -6,14 +6,14 @@ import { Button, Icon } from "boondoggle";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useElectric } from "@shared/electric-sql";
-import { delete_all, delete_selected } from "@shared/i18n";
+import * as i18n from "@shared/i18n";
 import { selectSelectedTasks, setSelectedTasks } from "@shared/redux";
 
 function getDeleteLabel(selectedTasks: Selection) {
 	if (selectedTasks === "all") {
-		return delete_all;
+		return i18n.delete_all;
 	}
-	return `${delete_selected} (${selectedTasks.size})`;
+	return `${i18n.delete_selected} (${selectedTasks.size})`;
 }
 
 export function ButtonDeleteTasks() {
