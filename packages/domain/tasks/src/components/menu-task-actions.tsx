@@ -2,44 +2,24 @@ import { Button, Icon, Menu, Popover } from "boondoggle";
 import { faEllipsis } from "@fortawesome/pro-solid-svg-icons/faEllipsis";
 import * as i18n from "@shared/i18n";
 import { useElectric } from "@shared/electric-sql";
-import type { Selection } from "react-aria-components";
 
-function getDeleteLabel(selectedTasks: Selection) {
-	if (selectedTasks === "all") {
-		return i18n.delete_all_tasks;
-	}
-	return `${i18n.delete_selected_tasks} (${selectedTasks.size})`;
-}
-
-export function MenuTasksActions({ selectedTasks }: { selectedTasks: Selection }) {
+export function MenuTaskActions({ id }: { id: string }) {
 	const { db } = useElectric()!;
 
 	const deleteSelectedTasks = async () => {
-		if (selectedTasks === "all") {
-			return db.tasks.deleteMany();
-		} else {
-			return db.tasks.deleteMany({
-				where: { id: { in: Array.from(selectedTasks).map((k) => k.toString()) } },
-			});
-		}
+		return db.tasks.delete({ where: { id } });
 	};
-
-	const hasSelection: boolean = selectedTasks === "all" || selectedTasks.size > 0;
 
 	return (
 		<Menu.Trigger>
-			<Button appearance="secondary" square>
+			<Button appearance="ghost" square>
 				<Icon icon={faEllipsis} />
 			</Button>
 			<Popover placement="bottom right">
 				<Menu.DropdownMenu>
 					<Menu.Section>
-						<Menu.Item
-							color={hasSelection ? "red" : undefined}
-							isDisabled={!hasSelection}
-							onAction={deleteSelectedTasks}
-						>
-							{getDeleteLabel(selectedTasks)}
+						<Menu.Item color="red" onAction={deleteSelectedTasks}>
+							{i18n.delete_task}
 						</Menu.Item>
 					</Menu.Section>
 				</Menu.DropdownMenu>

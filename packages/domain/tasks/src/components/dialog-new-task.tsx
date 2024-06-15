@@ -1,12 +1,14 @@
 import { TasksSchema, useElectric, task_statusType } from "@shared/electric-sql";
 import {
-	App,
 	Button,
 	ComboBoxButton,
 	ComboBoxInput,
+	DateInput,
+	DatePickerButton,
 	Dialog,
 	Form,
 	FormComboBox,
+	FormDatePicker,
 	FormTextField,
 	Group,
 	Icon,
@@ -22,12 +24,22 @@ import { faPlus } from "@fortawesome/pro-solid-svg-icons/faPlus";
 import "../css/index.css";
 import { IconTaskStatus } from "./icon-task-status";
 
-const createTaskSchema = TasksSchema.omit({ created_at: true, updated_at: true, id: true });
+const createTaskSchema = TasksSchema.omit({
+	created_at: true,
+	updated_at: true,
+	id: true,
+	due_date: true,
+	description: true,
+}).merge(
+	z.object({
+		description: z.string().optional(),
+		due_date: z.coerce.date().optional(),
+	}),
+);
 type CreateTask = z.infer<typeof createTaskSchema>;
 
 export function DialogNewTask() {
 	const { db } = useElectric()!;
-	const [_, setDrawer] = App.useDrawer();
 
 	const addPayment = async (p: CreateTask) => {
 		const date = new Date(Date.now());
@@ -47,12 +59,15 @@ export function DialogNewTask() {
 				<Icon icon={faPlus} />
 				{i18n.new_task}
 			</Button>
-			<Dialog.ModalOverlay>
+			<Dialog.ModalOverlay isDismissable>
 				<Dialog.Modal>
 					<Form<CreateTask>
 						onSubmit={addPayment}
 						options={{
 							resolver: zodResolver(createTaskSchema),
+							defaultValues: {
+								status: "to_do",
+							},
 						}}
 						onError={(e) => {
 							console.error(e);
@@ -74,6 +89,20 @@ export function DialogNewTask() {
 									<TextArea />
 								</FormTextField>
 
+								<FormDatePicker
+									className="mb-4"
+									name="due_date"
+									granularity="minute"
+								>
+									<Label>{i18n.due_date}</Label>
+									<Group>
+										<DateInput unstyled />
+										<DatePickerButton />
+									</Group>
+								</FormDatePicker>
+
+								<hr />
+
 								<FormComboBox<task_statusType>
 									items={[
 										{
@@ -94,7 +123,6 @@ export function DialogNewTask() {
 									]}
 									className="mb-4"
 									name="status"
-									defaultSelectedKey="to_do"
 								>
 									<Label>{i18n.status}</Label>
 									<Group>
@@ -103,6 +131,7 @@ export function DialogNewTask() {
 									</Group>
 								</FormComboBox>
 							</Dialog.Content>
+
 							<Dialog.Footer>
 								<Button type="submit">Submit</Button>
 							</Dialog.Footer>

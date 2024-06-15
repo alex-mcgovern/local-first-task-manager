@@ -1,28 +1,8 @@
 import { task_statusType, useElectric } from "@shared/electric-sql";
-import { faCircleDot } from "@fortawesome/pro-solid-svg-icons/faCircleDot";
-import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons/faCheckCircle";
-import { faCircleHalfStroke } from "@fortawesome/pro-solid-svg-icons/faCircleHalfStroke";
-import { Button, Icon, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
-import { exhaustiveSwitchGuard } from "@shared/utils";
+import { Button, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
 import * as i18n from "@shared/i18n";
 import { IconTaskStatus } from "../components/icon-task-status";
-
-function getStr(status: task_statusType) {
-	switch (status) {
-		case "completed": {
-			return i18n.status_completed;
-		}
-		case "in_progress": {
-			return i18n.status_in_progress;
-		}
-		case "to_do": {
-			return i18n.status_to_do;
-		}
-		default: {
-			return exhaustiveSwitchGuard(status);
-		}
-	}
-}
+import { getStatusString } from "../lib/strings";
 
 export function MenuTaskStatus({ status, id }: { status: task_statusType; id: string }) {
 	const { db } = useElectric()!;
@@ -41,10 +21,10 @@ export function MenuTaskStatus({ status, id }: { status: task_statusType; id: st
 					<IconTaskStatus status={status} />
 					{/* <Icon color="grey" icon={getIcon(status)} /> */}
 				</Button>
-				<Tooltip placement="bottom">{getStr(status)}</Tooltip>
+				<Tooltip placement="bottom">{getStatusString(status)}</Tooltip>
 			</TooltipTrigger>
 			<Popover placement="left top">
-				<Menu.DropdownMenu>
+				<Menu.DropdownMenu selectedKeys={[status]} disabledKeys={[status]}>
 					<Menu.Section>
 						<Menu.Item
 							icon={<IconTaskStatus status="to_do" />}

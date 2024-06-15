@@ -2,7 +2,6 @@ import { z } from 'zod';
 import type { Prisma } from './prismaClient';
 import { type TableSchema, DbSchema, ElectricClient, type HKT } from 'electric-sql/client/model';
 import migrations from './migrations';
-import pgMigrations from './pg-migrations';
 
 /////////////////////////////////////////
 // HELPER FUNCTIONS
@@ -17,7 +16,7 @@ export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
-export const TasksScalarFieldEnumSchema = z.enum(['id','title','description','status','created_at','updated_at']);
+export const TasksScalarFieldEnumSchema = z.enum(['id','title','description','status','created_at','updated_at','due_date']);
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
@@ -40,6 +39,7 @@ export const TasksSchema = z.object({
   description: z.string().nullable(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
+  due_date: z.coerce.date().nullable(),
 })
 
 export type Tasks = z.infer<typeof TasksSchema>
@@ -58,6 +58,7 @@ export const TasksSelectSchema: z.ZodType<Prisma.TasksSelect> = z.object({
   status: z.boolean().optional(),
   created_at: z.boolean().optional(),
   updated_at: z.boolean().optional(),
+  due_date: z.boolean().optional(),
 }).strict()
 
 
@@ -75,6 +76,7 @@ export const TasksWhereInputSchema: z.ZodType<Prisma.TasksWhereInput> = z.object
   status: z.union([ z.lazy(() => Enumtask_statusFilterSchema),z.lazy(() => task_statusSchema) ]).optional(),
   created_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updated_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  due_date: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
 }).strict();
 
 export const TasksOrderByWithRelationInputSchema: z.ZodType<Prisma.TasksOrderByWithRelationInput> = z.object({
@@ -83,7 +85,8 @@ export const TasksOrderByWithRelationInputSchema: z.ZodType<Prisma.TasksOrderByW
   description: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
-  updated_at: z.lazy(() => SortOrderSchema).optional()
+  updated_at: z.lazy(() => SortOrderSchema).optional(),
+  due_date: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const TasksWhereUniqueInputSchema: z.ZodType<Prisma.TasksWhereUniqueInput> = z.object({
@@ -97,6 +100,7 @@ export const TasksOrderByWithAggregationInputSchema: z.ZodType<Prisma.TasksOrder
   status: z.lazy(() => SortOrderSchema).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
   updated_at: z.lazy(() => SortOrderSchema).optional(),
+  due_date: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => TasksCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => TasksMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => TasksMinOrderByAggregateInputSchema).optional()
@@ -112,6 +116,7 @@ export const TasksScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.TasksSc
   status: z.union([ z.lazy(() => Enumtask_statusWithAggregatesFilterSchema),z.lazy(() => task_statusSchema) ]).optional(),
   created_at: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updated_at: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  due_date: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
 }).strict();
 
 export const TasksCreateInputSchema: z.ZodType<Prisma.TasksCreateInput> = z.object({
@@ -120,7 +125,8 @@ export const TasksCreateInputSchema: z.ZodType<Prisma.TasksCreateInput> = z.obje
   description: z.string().optional().nullable(),
   status: z.lazy(() => task_statusSchema),
   created_at: z.coerce.date(),
-  updated_at: z.coerce.date()
+  updated_at: z.coerce.date(),
+  due_date: z.coerce.date().optional().nullable()
 }).strict();
 
 export const TasksUncheckedCreateInputSchema: z.ZodType<Prisma.TasksUncheckedCreateInput> = z.object({
@@ -129,7 +135,8 @@ export const TasksUncheckedCreateInputSchema: z.ZodType<Prisma.TasksUncheckedCre
   description: z.string().optional().nullable(),
   status: z.lazy(() => task_statusSchema),
   created_at: z.coerce.date(),
-  updated_at: z.coerce.date()
+  updated_at: z.coerce.date(),
+  due_date: z.coerce.date().optional().nullable()
 }).strict();
 
 export const TasksUpdateInputSchema: z.ZodType<Prisma.TasksUpdateInput> = z.object({
@@ -139,6 +146,7 @@ export const TasksUpdateInputSchema: z.ZodType<Prisma.TasksUpdateInput> = z.obje
   status: z.union([ z.lazy(() => task_statusSchema),z.lazy(() => Enumtask_statusFieldUpdateOperationsInputSchema) ]).optional(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  due_date: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const TasksUncheckedUpdateInputSchema: z.ZodType<Prisma.TasksUncheckedUpdateInput> = z.object({
@@ -148,6 +156,7 @@ export const TasksUncheckedUpdateInputSchema: z.ZodType<Prisma.TasksUncheckedUpd
   status: z.union([ z.lazy(() => task_statusSchema),z.lazy(() => Enumtask_statusFieldUpdateOperationsInputSchema) ]).optional(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  due_date: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const TasksCreateManyInputSchema: z.ZodType<Prisma.TasksCreateManyInput> = z.object({
@@ -156,7 +165,8 @@ export const TasksCreateManyInputSchema: z.ZodType<Prisma.TasksCreateManyInput> 
   description: z.string().optional().nullable(),
   status: z.lazy(() => task_statusSchema),
   created_at: z.coerce.date(),
-  updated_at: z.coerce.date()
+  updated_at: z.coerce.date(),
+  due_date: z.coerce.date().optional().nullable()
 }).strict();
 
 export const TasksUpdateManyMutationInputSchema: z.ZodType<Prisma.TasksUpdateManyMutationInput> = z.object({
@@ -166,6 +176,7 @@ export const TasksUpdateManyMutationInputSchema: z.ZodType<Prisma.TasksUpdateMan
   status: z.union([ z.lazy(() => task_statusSchema),z.lazy(() => Enumtask_statusFieldUpdateOperationsInputSchema) ]).optional(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  due_date: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const TasksUncheckedUpdateManyInputSchema: z.ZodType<Prisma.TasksUncheckedUpdateManyInput> = z.object({
@@ -175,6 +186,7 @@ export const TasksUncheckedUpdateManyInputSchema: z.ZodType<Prisma.TasksUnchecke
   status: z.union([ z.lazy(() => task_statusSchema),z.lazy(() => Enumtask_statusFieldUpdateOperationsInputSchema) ]).optional(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  due_date: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const UuidFilterSchema: z.ZodType<Prisma.UuidFilter> = z.object({
@@ -237,13 +249,25 @@ export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
 }).strict();
 
+export const DateTimeNullableFilterSchema: z.ZodType<Prisma.DateTimeNullableFilter> = z.object({
+  equals: z.coerce.date().optional().nullable(),
+  in: z.coerce.date().array().optional().nullable(),
+  notIn: z.coerce.date().array().optional().nullable(),
+  lt: z.coerce.date().optional(),
+  lte: z.coerce.date().optional(),
+  gt: z.coerce.date().optional(),
+  gte: z.coerce.date().optional(),
+  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeNullableFilterSchema) ]).optional().nullable(),
+}).strict();
+
 export const TasksCountOrderByAggregateInputSchema: z.ZodType<Prisma.TasksCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   title: z.lazy(() => SortOrderSchema).optional(),
   description: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
-  updated_at: z.lazy(() => SortOrderSchema).optional()
+  updated_at: z.lazy(() => SortOrderSchema).optional(),
+  due_date: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const TasksMaxOrderByAggregateInputSchema: z.ZodType<Prisma.TasksMaxOrderByAggregateInput> = z.object({
@@ -252,7 +276,8 @@ export const TasksMaxOrderByAggregateInputSchema: z.ZodType<Prisma.TasksMaxOrder
   description: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
-  updated_at: z.lazy(() => SortOrderSchema).optional()
+  updated_at: z.lazy(() => SortOrderSchema).optional(),
+  due_date: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const TasksMinOrderByAggregateInputSchema: z.ZodType<Prisma.TasksMinOrderByAggregateInput> = z.object({
@@ -261,7 +286,8 @@ export const TasksMinOrderByAggregateInputSchema: z.ZodType<Prisma.TasksMinOrder
   description: z.lazy(() => SortOrderSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   created_at: z.lazy(() => SortOrderSchema).optional(),
-  updated_at: z.lazy(() => SortOrderSchema).optional()
+  updated_at: z.lazy(() => SortOrderSchema).optional(),
+  due_date: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const UuidWithAggregatesFilterSchema: z.ZodType<Prisma.UuidWithAggregatesFilter> = z.object({
@@ -339,6 +365,20 @@ export const DateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeWithAg
   _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
 }).strict();
 
+export const DateTimeNullableWithAggregatesFilterSchema: z.ZodType<Prisma.DateTimeNullableWithAggregatesFilter> = z.object({
+  equals: z.coerce.date().optional().nullable(),
+  in: z.coerce.date().array().optional().nullable(),
+  notIn: z.coerce.date().array().optional().nullable(),
+  lt: z.coerce.date().optional(),
+  lte: z.coerce.date().optional(),
+  gt: z.coerce.date().optional(),
+  gte: z.coerce.date().optional(),
+  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedDateTimeNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedDateTimeNullableFilterSchema).optional()
+}).strict();
+
 export const StringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.StringFieldUpdateOperationsInput> = z.object({
   set: z.string().optional()
 }).strict();
@@ -353,6 +393,10 @@ export const Enumtask_statusFieldUpdateOperationsInputSchema: z.ZodType<Prisma.E
 
 export const DateTimeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.DateTimeFieldUpdateOperationsInput> = z.object({
   set: z.coerce.date().optional()
+}).strict();
+
+export const NullableDateTimeFieldUpdateOperationsInputSchema: z.ZodType<Prisma.NullableDateTimeFieldUpdateOperationsInput> = z.object({
+  set: z.coerce.date().optional().nullable()
 }).strict();
 
 export const NestedUuidFilterSchema: z.ZodType<Prisma.NestedUuidFilter> = z.object({
@@ -410,6 +454,17 @@ export const NestedDateTimeFilterSchema: z.ZodType<Prisma.NestedDateTimeFilter> 
   gt: z.coerce.date().optional(),
   gte: z.coerce.date().optional(),
   not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeFilterSchema) ]).optional(),
+}).strict();
+
+export const NestedDateTimeNullableFilterSchema: z.ZodType<Prisma.NestedDateTimeNullableFilter> = z.object({
+  equals: z.coerce.date().optional().nullable(),
+  in: z.coerce.date().array().optional().nullable(),
+  notIn: z.coerce.date().array().optional().nullable(),
+  lt: z.coerce.date().optional(),
+  lte: z.coerce.date().optional(),
+  gt: z.coerce.date().optional(),
+  gte: z.coerce.date().optional(),
+  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeNullableFilterSchema) ]).optional().nullable(),
 }).strict();
 
 export const NestedUuidWithAggregatesFilterSchema: z.ZodType<Prisma.NestedUuidWithAggregatesFilter> = z.object({
@@ -504,6 +559,20 @@ export const NestedDateTimeWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDa
   _count: z.lazy(() => NestedIntFilterSchema).optional(),
   _min: z.lazy(() => NestedDateTimeFilterSchema).optional(),
   _max: z.lazy(() => NestedDateTimeFilterSchema).optional()
+}).strict();
+
+export const NestedDateTimeNullableWithAggregatesFilterSchema: z.ZodType<Prisma.NestedDateTimeNullableWithAggregatesFilter> = z.object({
+  equals: z.coerce.date().optional().nullable(),
+  in: z.coerce.date().array().optional().nullable(),
+  notIn: z.coerce.date().array().optional().nullable(),
+  lt: z.coerce.date().optional(),
+  lte: z.coerce.date().optional(),
+  gt: z.coerce.date().optional(),
+  gte: z.coerce.date().optional(),
+  not: z.union([ z.coerce.date(),z.lazy(() => NestedDateTimeNullableWithAggregatesFilterSchema) ]).optional().nullable(),
+  _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
+  _min: z.lazy(() => NestedDateTimeNullableFilterSchema).optional(),
+  _max: z.lazy(() => NestedDateTimeNullableFilterSchema).optional()
 }).strict();
 
 /////////////////////////////////////////
@@ -635,6 +704,10 @@ export const tableSchemas = {
       [
         "updated_at",
         "TIMESTAMPTZ"
+      ],
+      [
+        "due_date",
+        "TIMESTAMPTZ"
       ]
     ]),
     relations: [
@@ -665,5 +738,5 @@ export const tableSchemas = {
   >,
 }
 
-export const schema = new DbSchema(tableSchemas, migrations, pgMigrations)
+export const schema = new DbSchema(tableSchemas, migrations)
 export type Electric = ElectricClient<typeof schema>

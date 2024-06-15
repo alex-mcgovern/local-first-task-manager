@@ -26,6 +26,7 @@ export type Tasks = {
   status: task_status
   created_at: Date
   updated_at: Date
+  due_date: Date | null
 }
 
 
@@ -843,6 +844,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status: task_status | null
     created_at: Date | null
     updated_at: Date | null
+    due_date: Date | null
   }
 
   export type TasksMaxAggregateOutputType = {
@@ -852,6 +854,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status: task_status | null
     created_at: Date | null
     updated_at: Date | null
+    due_date: Date | null
   }
 
   export type TasksCountAggregateOutputType = {
@@ -861,6 +864,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status: number
     created_at: number
     updated_at: number
+    due_date: number
     _all: number
   }
 
@@ -872,6 +876,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: true
     created_at?: true
     updated_at?: true
+    due_date?: true
   }
 
   export type TasksMaxAggregateInputType = {
@@ -881,6 +886,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: true
     created_at?: true
     updated_at?: true
+    due_date?: true
   }
 
   export type TasksCountAggregateInputType = {
@@ -890,6 +896,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: true
     created_at?: true
     updated_at?: true
+    due_date?: true
     _all?: true
   }
 
@@ -978,6 +985,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status: task_status
     created_at: Date
     updated_at: Date
+    due_date: Date | null
     _count: TasksCountAggregateOutputType | null
     _min: TasksMinAggregateOutputType | null
     _max: TasksMaxAggregateOutputType | null
@@ -1004,6 +1012,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: boolean
     created_at?: boolean
     updated_at?: boolean
+    due_date?: boolean
   }
 
 
@@ -1791,7 +1800,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     description: 'description',
     status: 'status',
     created_at: 'created_at',
-    updated_at: 'updated_at'
+    updated_at: 'updated_at',
+    due_date: 'due_date'
   };
 
   export type TasksScalarFieldEnum = (typeof TasksScalarFieldEnum)[keyof typeof TasksScalarFieldEnum]
@@ -1822,6 +1832,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: Enumtask_statusFilter | task_status
     created_at?: DateTimeFilter | Date | string
     updated_at?: DateTimeFilter | Date | string
+    due_date?: DateTimeNullableFilter | Date | string | null
   }
 
   export type TasksOrderByWithRelationInput = {
@@ -1831,6 +1842,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    due_date?: SortOrder
   }
 
   export type TasksWhereUniqueInput = {
@@ -1844,6 +1856,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    due_date?: SortOrder
     _count?: TasksCountOrderByAggregateInput
     _max?: TasksMaxOrderByAggregateInput
     _min?: TasksMinOrderByAggregateInput
@@ -1859,6 +1872,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: Enumtask_statusWithAggregatesFilter | task_status
     created_at?: DateTimeWithAggregatesFilter | Date | string
     updated_at?: DateTimeWithAggregatesFilter | Date | string
+    due_date?: DateTimeNullableWithAggregatesFilter | Date | string | null
   }
 
   export type TasksCreateInput = {
@@ -1868,6 +1882,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status: task_status
     created_at: Date | string
     updated_at: Date | string
+    due_date?: Date | string | null
   }
 
   export type TasksUncheckedCreateInput = {
@@ -1877,6 +1892,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status: task_status
     created_at: Date | string
     updated_at: Date | string
+    due_date?: Date | string | null
   }
 
   export type TasksUpdateInput = {
@@ -1886,6 +1902,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: Enumtask_statusFieldUpdateOperationsInput | task_status
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    due_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TasksUncheckedUpdateInput = {
@@ -1895,6 +1912,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: Enumtask_statusFieldUpdateOperationsInput | task_status
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    due_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TasksCreateManyInput = {
@@ -1904,6 +1922,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status: task_status
     created_at: Date | string
     updated_at: Date | string
+    due_date?: Date | string | null
   }
 
   export type TasksUpdateManyMutationInput = {
@@ -1913,6 +1932,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: Enumtask_statusFieldUpdateOperationsInput | task_status
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    due_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type TasksUncheckedUpdateManyInput = {
@@ -1922,6 +1942,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: Enumtask_statusFieldUpdateOperationsInput | task_status
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    due_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UuidFilter = {
@@ -1984,6 +2005,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedDateTimeFilter | Date | string
   }
 
+  export type DateTimeNullableFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableFilter | Date | string | null
+  }
+
   export type TasksCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -1991,6 +2023,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    due_date?: SortOrder
   }
 
   export type TasksMaxOrderByAggregateInput = {
@@ -2000,6 +2033,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    due_date?: SortOrder
   }
 
   export type TasksMinOrderByAggregateInput = {
@@ -2009,6 +2043,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    due_date?: SortOrder
   }
 
   export type UuidWithAggregatesFilter = {
@@ -2086,6 +2121,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedDateTimeFilter
   }
 
+  export type DateTimeNullableWithAggregatesFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedDateTimeNullableFilter
+    _max?: NestedDateTimeNullableFilter
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -2100,6 +2149,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type NestedUuidFilter = {
@@ -2157,6 +2210,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type NestedDateTimeNullableFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableFilter | Date | string | null
   }
 
   export type NestedUuidWithAggregatesFilter = {
@@ -2251,6 +2315,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedDateTimeNullableFilter
+    _max?: NestedDateTimeNullableFilter
   }
 
 

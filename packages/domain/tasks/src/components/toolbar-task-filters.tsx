@@ -1,0 +1,121 @@
+import {
+	clearFilterDueDate,
+	clearFilterTaskStatus,
+	selectDueDateFilter,
+	selectStatusFilterList,
+} from "@shared/redux";
+import { FilterButton, Menu, Popover } from "boondoggle";
+import { useSelector, useDispatch } from "react-redux";
+import * as i18n from "@shared/i18n";
+import { getStatusString } from "../lib/strings";
+import { MenuTaskFilterDueDate, MenuTaskFilterStatus } from "./menu-task-filters";
+import { PreselectedDatetimeRange } from "@shared/date";
+import { exhaustiveSwitchGuard } from "@shared/utils";
+
+function FilterControlTaskStatus() {
+	const filters = useSelector(selectStatusFilterList);
+	const dispatch = useDispatch();
+
+	const filterLabel = filters.map(getStatusString).join(", ");
+
+	if (filters.length === 0) {
+		return null;
+	}
+
+	return (
+		<FilterButton.Group isFilterApplied>
+			<FilterButton.Label>{i18n.status}</FilterButton.Label>
+			<Menu.Trigger>
+				<FilterButton.Button>{filterLabel}</FilterButton.Button>
+				<Popover>
+					<MenuTaskFilterStatus />
+				</Popover>
+			</Menu.Trigger>
+
+			<FilterButton.Remove
+				onPress={() => {
+					return dispatch(clearFilterTaskStatus());
+				}}
+			/>
+		</FilterButton.Group>
+	);
+}
+
+const getDateRangeString = (date_range: PreselectedDatetimeRange) => {
+	switch (date_range) {
+		case "last_30_days": {
+			return i18n.date_range_last_30_days;
+		}
+		case "last_7_days": {
+			return i18n.date_range_last_7_days;
+		}
+		case "last_90_days": {
+			return i18n.date_range_last_90_days;
+		}
+		case "last_day": {
+			return i18n.date_range_last_day;
+		}
+		case "last_hour": {
+			return i18n.date_range_last_hour;
+		}
+		case "next_30_days": {
+			return i18n.date_range_next_30_days;
+		}
+		case "next_7_days": {
+			return i18n.date_range_next_7_days;
+		}
+		case "next_90_days": {
+			return i18n.date_range_next_90_days;
+		}
+		case "next_day": {
+			return i18n.date_range_next_day;
+		}
+		case "next_hour": {
+			return i18n.date_range_next_hour;
+		}
+		default: {
+			return exhaustiveSwitchGuard(date_range);
+		}
+	}
+};
+
+function FilterControlDueDate() {
+	const filter = useSelector(selectDueDateFilter);
+	const dispatch = useDispatch();
+
+	if (!filter) {
+		return null;
+	}
+
+	const filterLabel = getDateRangeString(filter);
+
+	return (
+		<FilterButton.Group isFilterApplied>
+			<FilterButton.Label>{i18n.due_date}</FilterButton.Label>
+			<Menu.Trigger>
+				<FilterButton.Button>{filterLabel}</FilterButton.Button>
+				<Popover>
+					<MenuTaskFilterDueDate />
+				</Popover>
+			</Menu.Trigger>
+
+			<FilterButton.Remove
+				onPress={() => {
+					return dispatch(clearFilterDueDate());
+				}}
+			/>
+		</FilterButton.Group>
+	);
+}
+
+export function ToolbarTaskFilters() {
+	// const statusFilterList = useSelector(selectStatusFilterList);
+	// const dispatch = useDispatch();
+
+	return (
+		<div className="flex align-center gap-2 pt-2 pb-2 pl-4 pr-4">
+			<FilterControlTaskStatus />
+			<FilterControlDueDate />
+		</div>
+	);
+}

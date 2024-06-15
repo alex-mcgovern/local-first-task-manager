@@ -1,5 +1,4 @@
 import { Icon } from "boondoggle";
-import React from "react";
 import { ComponentProps } from "react";
 import { task_statusType } from "@shared/electric-sql";
 import { faCircleDot } from "@fortawesome/pro-solid-svg-icons/faCircleDot";

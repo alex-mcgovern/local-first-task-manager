@@ -11,7 +11,7 @@
 	"main": "./src/index.ts",
 	"dependencies": {
 		"@fortawesome/pro-solid-svg-icons": "6.5.1",
-		"boondoggle": "^2.0.223",
+		"boondoggle": "^2.0.227",
 		"react": "18.2.0",
 		"wouter": "3.1.3"
 	}

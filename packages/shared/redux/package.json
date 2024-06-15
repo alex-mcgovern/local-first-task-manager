@@ -1,0 +1,14 @@
+{
+	"name": "@shared/redux",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"version": "0.0.0",
+	"type": "module",
+	"main": "./src/index.ts",
+	"dependencies": {
+		"@reduxjs/toolkit": "2.2.5",
+		"react-redux": "9.1.2",
+		"@shared/electric-sql": "*"
+	}
+}
