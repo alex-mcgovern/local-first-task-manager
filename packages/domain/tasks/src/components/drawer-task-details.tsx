@@ -1,5 +1,10 @@
 import type { z } from "zod";
-import type { task_statusType } from "@shared/electric-sql";
+
+import type {
+	task_priorityType as TaskPriority,
+	task_statusType as TaskStatus,
+} from "@shared/electric-sql";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { parseAbsoluteToLocal } from "@internationalized/date";
 import {
@@ -18,8 +23,13 @@ import {
 	TextArea,
 } from "boondoggle";
 import { useLiveQuery } from "electric-sql/react";
+import { useDispatch } from "react-redux";
+
 import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
+
+import { defaultPriorityUpdated } from "../redux/create-tasks-slice";
+import { IconTaskPriority } from "./icon-task-priority";
 import { IconTaskStatus } from "./icon-task-status";
 
 const updateTaskSchema = TasksSchema.omit({
@@ -34,6 +44,8 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 	if (!db) {
 		throw new Error("Electric client not found");
 	}
+
+	const dispatch = useDispatch();
 
 	const { results: task } = useLiveQuery(db.tasks.liveUnique({ where: { id } }));
 
@@ -79,7 +91,49 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 				<TextArea />
 			</FormTextField>
 
-			<FormComboBox<task_statusType>
+			<FormComboBox<TaskPriority>
+				className="mb-4"
+				items={[
+					{
+						id: "p0",
+						name: i18n.p0,
+						slotLeft: <IconTaskPriority priority="p0" />,
+					},
+					{
+						id: "p1",
+						name: i18n.p1,
+						slotLeft: <IconTaskPriority priority="p1" />,
+					},
+					{
+						id: "p2",
+						name: i18n.p2,
+						slotLeft: <IconTaskPriority priority="p2" />,
+					},
+					{
+						id: "p3",
+						name: i18n.p3,
+						slotLeft: <IconTaskPriority priority="p3" />,
+					},
+				]}
+				name="priority"
+				onSelectionChange={(p) => {
+					dispatch(
+						defaultPriorityUpdated(
+							// quirk of react-aria-components combobox
+							// means we lose type info on the key — meaning to open a PR
+							p?.toString() as TaskPriority,
+						),
+					);
+				}}
+			>
+				<Label>{i18n.priority}</Label>
+				<Group>
+					<ComboBoxInput unstyled />
+					<ComboBoxButton />
+				</Group>
+			</FormComboBox>
+
+			<FormComboBox<TaskStatus>
 				className="mb-4"
 				items={[
 					{
@@ -107,7 +161,9 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 				</Group>
 			</FormComboBox>
 
-			<Button type="submit">Submit</Button>
+			<div className="flex gap-2 justify-end">
+				<Button type="submit">{i18n.update}</Button>
+			</div>
 
 			<hr />
 

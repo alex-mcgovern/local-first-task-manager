@@ -1,19 +1,35 @@
-import type { task_statusType as Status, Tasks as Task } from "@shared/electric-sql";
-import { useEffect } from "react";
+// eslint-disable-next-line no-restricted-imports -- usually discourage direct import from `react-aria-components`, but this is necessary
+import type { SortDescriptor } from "react-aria-components";
+
+import type { Tasks as Task, task_statusType as TaskStatus } from "@shared/electric-sql";
+
+import { useCallback, useEffect } from "react";
+
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons/faCheckCircle";
 import { faExclamationCircle } from "@fortawesome/pro-solid-svg-icons/faExclamationCircle";
 import { Icon, Pill, Table } from "boondoggle";
 import clsx from "clsx";
 import { useLiveQuery } from "electric-sql/react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { formatDateTime } from "@shared/date";
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
-import { selectSelectedTasks, selectWhere, setOrderBy, setSelectedTasks } from "@shared/redux";
+
+import { deserializeSelection, serializeSelection } from "../lib/selection";
+import { isTaskKey } from "../lib/validation";
+import { selectDerivedTaskFilterWhereClause } from "../redux/filter-tasks-slice";
+import { selectTasksSelection, selectionUpdated } from "../redux/select-tasks-slice";
+import {
+	columnSorted,
+	selectTasksOrderByClause,
+	selectTasksSortDescriptor,
+} from "../redux/sort-tasks-slice";
 import { MenuTaskActions } from "./menu-task-actions";
+import { MenuTaskPriority } from "./menu-task-priority";
 import { MenuTaskStatus } from "./menu-task-status";
 
-function DueDate({ date, status }: { date: Date; status: Status }) {
+function DueDate({ date, status }: { date: Date; status: TaskStatus }) {
 	const isOverdue = status !== "completed" && date < new Date();
 	const isDone = status === "completed";
 
@@ -26,18 +42,52 @@ function DueDate({ date, status }: { date: Date; status: Status }) {
 	);
 }
 
-export function TableTasks() {
-	const where = useSelector(selectWhere);
-	const selectedTasks = useSelector(selectSelectedTasks);
+/**
+ * Hook to manage sorting of the tasks table.
+ * @returns The current sort descriptor (required by react-aria-components Table) and a function to update the sort descriptor.
+ */
+function useTableSorting() {
 	const dispatch = useDispatch();
 
+	const sort_descriptor = useSelector(selectTasksSortDescriptor);
+
+	const updateSort = useCallback(
+		({ column, direction }: SortDescriptor) => {
+			if (!column) {
+				return;
+			}
+
+			const columnKey = column.toString();
+			// Because we don't have type information on our columns, we need to runtime check
+			// if the column is a valid task key before dispatching the action, else we'll be
+			// wiring up each column manually.
+			if (isTaskKey(columnKey)) {
+				dispatch(
+					columnSorted({
+						column: columnKey,
+						direction,
+					}),
+				);
+			}
+		},
+		[dispatch],
+	);
+
+	return { sort_descriptor, updateSort };
+}
+
+function useDbTasks(): Task[] {
 	const { db } = useElectric() || {};
 	if (!db) {
 		throw new Error("Electric client not found");
 	}
+
+	// Get the `where` and `orderBy` params from Redux to provide to the Electric SQL query
+	const where = useSelector(selectDerivedTaskFilterWhereClause);
+	const order_by = useSelector(selectTasksOrderByClause);
+
 	// @ts-expect-error - ToDo: Figure out why TS shouting at me
-	const { results } = useLiveQuery(db.tasks.liveMany({ where }));
-	const tasks: Task[] = results ?? [];
+	const { results } = useLiveQuery(db.tasks.liveMany({ orderBy: order_by, where }));
 
 	useEffect(() => {
 		const syncTasks = async () => {
@@ -51,61 +101,64 @@ export function TableTasks() {
 		void syncTasks();
 	}, [db.tasks]);
 
+	return results ?? [];
+}
+
+export function TableTasks() {
+	const dispatch = useDispatch();
+	const tasks = useDbTasks();
+	const { sort_descriptor, updateSort } = useTableSorting();
+	const selected_tasks = deserializeSelection(useSelector(selectTasksSelection));
+
 	return (
 		<Table.ResizableContainer>
 			<Table.Root
 				aria-label={i18n.tasks_table}
 				onSelectionChange={(v) => {
-					return dispatch(setSelectedTasks(v));
+					return dispatch(selectionUpdated(serializeSelection(v)));
 				}}
-				onSortChange={({ column, direction }) => {
-					switch (column) {
-						case "due_date": {
-							return dispatch(
-								setOrderBy({
-									due_date: direction === "ascending" ? "asc" : "desc",
-								}),
-							);
-						}
-						case "title": {
-							return dispatch(
-								setOrderBy({
-									title: direction === "ascending" ? "asc" : "desc",
-								}),
-							);
-						}
-						default: {
-							return null;
-						}
-					}
-				}}
-				selectedKeys={selectedTasks}
+				onSortChange={updateSort}
+				selectedKeys={selected_tasks}
 				selectionMode="multiple"
+				sortDescriptor={sort_descriptor}
 			>
 				<Table.Header>
-					<Table.Row>
-						<Table.Column allowsSorting id="title" isRowHeader sticky>
-							{i18n.title}
-						</Table.Column>
-						<Table.Column allowsSorting id="due_date" right sticky width="1fr">
-							{i18n.due_date}
-						</Table.Column>
-						<Table.Column right sticky width={48} />
-					</Table.Row>
+					<Table.Column allowsSorting center id="priority" sticky width={28}>
+						{i18n.priority}
+					</Table.Column>
+
+					<Table.Column allowsSorting center id="status" sticky width={28}>
+						{i18n.status}
+					</Table.Column>
+
+					<Table.Column allowsSorting id="title" isRowHeader sticky>
+						{i18n.title}
+					</Table.Column>
+
+					<Table.Column allowsSorting id="due_date" right sticky width="1fr">
+						{i18n.due_date}
+					</Table.Column>
+
+					<Table.Column right sticky width={48} />
 				</Table.Header>
+
 				<Table.Body>
 					{tasks.map((t) => {
 						return (
 							<Table.Row href={`/tasks/${t.id}`} id={t.id} key={t.id}>
-								<Table.Cell textValue={t.title}>
-									<div
-										className={clsx("flex gap-2 align-center", {
-											"line-through color-gray": t.status === "completed",
-										})}
-									>
-										<MenuTaskStatus id={t.id} status={t.status} />
-										{t.title}
-									</div>
+								<Table.Cell center textValue={t.priority}>
+									<MenuTaskPriority id={t.id} priority={t.priority} />
+								</Table.Cell>
+								<Table.Cell center textValue={t.status}>
+									<MenuTaskStatus id={t.id} status={t.status} />
+								</Table.Cell>
+								<Table.Cell
+									className={clsx({
+										"line-through color-gray": t.status === "completed",
+									})}
+									textValue={t.title}
+								>
+									{t.title}
 								</Table.Cell>
 								<Table.Cell
 									className="color-gray"

@@ -1,9 +1,12 @@
 import type { Electric } from "../client";
+
 import { useEffect, useState } from "react";
+
 import { makeElectricContext } from "electric-sql/react";
 import { uniqueTabId } from "electric-sql/util";
 import { LIB_VERSION } from "electric-sql/version";
 import { ElectricDatabase, electrify } from "electric-sql/wa-sqlite";
+
 import { authToken } from "../../../../../src/auth";
 import { schema } from "../client";
 

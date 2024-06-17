@@ -1,11 +1,15 @@
 // eslint-disable-next-line no-restricted-imports -- usually discourage direct import from `react-aria-components`, but this is necessary
 import type { Selection } from "react-aria-components";
+
 import { faTrash } from "@fortawesome/pro-solid-svg-icons/faTrash";
 import { Button, Icon } from "boondoggle";
 import { useDispatch, useSelector } from "react-redux";
+
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
-import { selectSelectedTasks, setSelectedTasks } from "@shared/redux";
+
+import { deserializeSelection } from "../lib/selection";
+import { selectTasksSelection, selectionUpdated } from "../redux/select-tasks-slice";
 
 function getDeleteLabel(selectedTasks: Selection) {
 	if (selectedTasks === "all") {
@@ -15,7 +19,7 @@ function getDeleteLabel(selectedTasks: Selection) {
 }
 
 export function ButtonDeleteTasks() {
-	const selected = useSelector(selectSelectedTasks);
+	const selected = deserializeSelection(useSelector(selectTasksSelection));
 	const dispatch = useDispatch();
 
 	const { db } = useElectric() || {};
@@ -38,7 +42,7 @@ export function ButtonDeleteTasks() {
 			});
 		}
 		// Clear the selection after deleting the tasks.
-		dispatch(setSelectedTasks(new Set()));
+		dispatch(selectionUpdated([]));
 	};
 
 	const hasSelection: boolean = selected === "all" || selected.size > 0;

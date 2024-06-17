@@ -1,7 +1,20 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import taskManagementReducer from "./state/task-management";
 
-const rootReducer = combineReducers({ taskManagementReducer });
+import {
+	taskCreationReducer,
+	taskFilterReducer,
+	taskOrderingReducer,
+	taskSelectionReducer,
+} from "@domain/tasks";
+
+const tasksReducer = combineReducers({
+	create: taskCreationReducer,
+	filter: taskFilterReducer,
+	order: taskOrderingReducer,
+	selection: taskSelectionReducer,
+});
+
+const rootReducer = combineReducers({ tasks: tasksReducer });
 
 export const store = configureStore({
 	reducer: rootReducer,

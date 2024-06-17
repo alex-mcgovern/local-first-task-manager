@@ -12,7 +12,8 @@
 	"dependencies": {
 		"@fortawesome/pro-solid-svg-icons": "6.5.1",
 		"@sentry/react": "8.9.2",
-		"boondoggle": "2.0.228",
+		"@shared/i18n": "*",
+		"boondoggle": "^2.0.250",
 		"react": "18.3.1",
 		"wouter": "3.1.3"
 	}
