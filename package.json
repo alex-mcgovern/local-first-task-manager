@@ -11,7 +11,7 @@
 		"backend:stop": "electric-sql stop",
 		"backend:up": "electric-sql start --with-postgres --detach",
 		"backend:down": "electric-sql stop --remove",
-		"client:generate": "electric-sql generate -o ./packages/shared/electric-sql/src/client",
+		"client:generate": "electric-sql generate -o ./packages/shared/electric-sql/src/client && npm run fix",
 		"client:watch": "electric-sql generate --watch",
 		"db:migrate": "electric-sql with-config \"pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
 		"db:psql": "electric-sql psql",
