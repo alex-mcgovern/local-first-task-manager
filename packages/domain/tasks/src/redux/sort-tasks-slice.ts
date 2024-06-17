@@ -22,7 +22,7 @@ type State = {
 
 const initial_state: State = { order_by_clause: { status: "desc" }, sort_descriptor: undefined };
 
-export const sortTasksSlice = createSlice({
+const sortTasksSlice = createSlice({
 	initialState: initial_state,
 	name: "sortTasksSlice",
 	reducers: {

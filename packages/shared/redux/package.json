@@ -9,11 +9,6 @@
 	"dependencies": {
 		"@domain/tasks": "*",
 		"@reduxjs/toolkit": "2.2.5",
-		"@shared/date": "*",
-		"@shared/electric-sql": "*",
 		"react-redux": "9.1.2"
-	},
-	"devDependencies": {
-		"react-aria-components": "1.2.0"
 	}
 }

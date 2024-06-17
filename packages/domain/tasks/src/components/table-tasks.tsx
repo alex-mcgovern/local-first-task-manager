@@ -18,7 +18,7 @@ import * as i18n from "@shared/i18n";
 
 import { deserializeSelection, serializeSelection } from "../lib/selection";
 import { isTaskKey } from "../lib/validation";
-import { selectDerivedTaskFilterWhereClause } from "../redux/filter-tasks-slice";
+import { selectTaskFilterWhereClause } from "../redux/filter-tasks-slice";
 import { selectTasksSelection, selectionUpdated } from "../redux/select-tasks-slice";
 import {
 	columnSorted,
@@ -83,7 +83,7 @@ function useDbTasks(): Task[] {
 	}
 
 	// Get the `where` and `orderBy` params from Redux to provide to the Electric SQL query
-	const where = useSelector(selectDerivedTaskFilterWhereClause);
+	const where = useSelector(selectTaskFilterWhereClause);
 	const order_by = useSelector(selectTasksOrderByClause);
 
 	// @ts-expect-error - ToDo: Figure out why TS shouting at me

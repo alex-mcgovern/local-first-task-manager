@@ -21,7 +21,7 @@ import { getStatusString } from "../lib/strings";
 import {
 	dueDateFilterApplied,
 	dueDateFilterCleared,
-	selectDerivedAreTasksFiltered,
+	selectAreTasksFiltered,
 	selectTaskFilterDueDate,
 	selectTaskFilterStatus,
 	statusFilterApplied,
@@ -136,7 +136,7 @@ const STATUS_MENU_ITEMS: { id: TaskStatus; label: string }[] = [
 	{ id: "completed", label: i18n.status_completed },
 ];
 
-export function MenuTaskFilterStatus() {
+function MenuTaskFilterStatus() {
 	const activeFilters = useSelector(selectTaskFilterStatus);
 	const dispatch = useDispatch();
 
@@ -192,7 +192,7 @@ const DUE_DATE_FUTURE_ITEMS: { id: PreselectedDatetimeRange; label: string }[] =
 	{ id: "next_90_days", label: i18n.date_range_next_90_days },
 ];
 
-export function MenuTaskFilterDueDate() {
+function MenuTaskFilterDueDate() {
 	const activeFilter = useSelector(selectTaskFilterDueDate);
 	const dispatch = useDispatch();
 
@@ -251,8 +251,8 @@ export function MenuTaskFilterDueDate() {
 	);
 }
 
-export function MenuTaskFilters() {
-	const is_filtered = useSelector(selectDerivedAreTasksFiltered);
+function MenuTaskFilters() {
+	const is_filtered = useSelector(selectAreTasksFiltered);
 
 	return (
 		<Menu.Trigger>

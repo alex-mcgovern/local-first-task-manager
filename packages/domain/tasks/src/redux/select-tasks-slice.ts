@@ -2,20 +2,19 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "@shared/redux";
 
+import type { SerializableSelection } from "../lib/selection";
+
 import { createSlice } from "@reduxjs/toolkit";
 
-// Either "all" or an array of UUIDs
-type Selection = "all" | string[];
-
-type State = { selected_tasks: Selection };
+type State = { selected_tasks: SerializableSelection };
 
 const initialState: State = { selected_tasks: [] };
 
-export const selectTasksSlice = createSlice({
+const selectTasksSlice = createSlice({
 	initialState,
 	name: "selectTasksSlice",
 	reducers: {
-		selectionUpdated: (state, action: PayloadAction<Selection>) => {
+		selectionUpdated: (state, action: PayloadAction<SerializableSelection>) => {
 			state.selected_tasks = action.payload;
 		},
 	},

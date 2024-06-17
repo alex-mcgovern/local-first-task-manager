@@ -22,7 +22,7 @@ const initialState: State = {
 	is_create_task_dialog_open: false,
 };
 
-export const createTasksSlice = createSlice({
+const createTasksSlice = createSlice({
 	initialState,
 	name: "createTasksSlice",
 	reducers: {
