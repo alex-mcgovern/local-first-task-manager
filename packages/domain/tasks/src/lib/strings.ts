@@ -26,16 +26,16 @@ export function getStatusString(status: TaskStatus) {
 export function getPriorityString(priority: TaskPriority) {
 	switch (priority) {
 		case "p0": {
-			return i18n.p0;
+			return i18n.priority_urgent;
 		}
 		case "p1": {
-			return i18n.p1;
+			return i18n.priority_high;
 		}
 		case "p2": {
-			return i18n.p2;
+			return i18n.priority_med;
 		}
 		case "p3": {
-			return i18n.p3;
+			return i18n.priority_low;
 		}
 		default: {
 			return exhaustiveSwitchGuard(priority);

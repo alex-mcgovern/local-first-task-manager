@@ -26,8 +26,8 @@ import {
 	selectTasksSortDescriptor,
 } from "../redux/sort-tasks-slice";
 import { MenuTaskActions } from "./menu-task-actions";
-import { MenuTaskPriority } from "./menu-task-priority";
 import { MenuTaskStatus } from "./menu-task-status";
+import { MenuTaskPriority } from "./priority";
 
 function DueDate({ date, status }: { date: Date; status: TaskStatus }) {
 	const isOverdue = status !== "completed" && date < new Date();

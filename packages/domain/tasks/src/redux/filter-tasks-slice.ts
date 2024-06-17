@@ -1,6 +1,6 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-import type { PreselectedDatetimeRange } from "@shared/date";
+import type { PreselectedDateTimeRange } from "@shared/date";
 import type { task_statusType as TaskStatus, TasksFindManyArgsSchema } from "@shared/electric-sql";
 import type { RootState } from "@shared/redux";
 
@@ -11,7 +11,7 @@ import { DateTimeRange } from "@shared/date";
 type TaskQueryWhereClause = Zod.infer<typeof TasksFindManyArgsSchema>["where"];
 
 type State = {
-	due_date: PreselectedDatetimeRange | undefined;
+	due_date: PreselectedDateTimeRange | undefined;
 	status: TaskStatus[];
 	where_clause: TaskQueryWhereClause;
 };
@@ -26,15 +26,17 @@ const filterTasksSlice = createSlice({
 	initialState: initial_state,
 	name: "filterTasksSlice",
 	reducers: {
-		dueDateFilterApplied: (state, action: PayloadAction<PreselectedDatetimeRange>) => {
+		dueDateFilterApplied: (state, action: PayloadAction<PreselectedDateTimeRange>) => {
 			state.due_date = action.payload;
-			const { from, to } = new DateTimeRange(action.payload).range;
 
 			// Update the `where_clause` passed into the Electric SQL query
+			const { from, to } = new DateTimeRange(action.payload).range;
+
 			if (state.where_clause) {
 				state.where_clause.due_date = { gte: from.toDate(), lte: to.toDate() };
 			}
 		},
+
 		dueDateFilterCleared: (state) => {
 			state.due_date = undefined;
 
@@ -43,11 +45,15 @@ const filterTasksSlice = createSlice({
 				delete state.where_clause.due_date;
 			}
 		},
-		statusFilterApplied: (state, action: PayloadAction<TaskStatus>) => {
-			// For simplicity, we'll track the status filter list
-			// directly in state. If the status is already in the list,
-			// remove it, otherwise, add it
 
+		filtersCleared: (state) => {
+			state.due_date = undefined;
+			state.status = [];
+			state.where_clause = {};
+		},
+
+		statusFilterApplied: (state, action: PayloadAction<TaskStatus>) => {
+			// We track the status filters in an array to drive the UI
 			if (state.status.includes(action.payload)) {
 				state.status = state.status.filter((s) => {
 					return s !== action.payload;
@@ -63,6 +69,7 @@ const filterTasksSlice = createSlice({
 				state.where_clause.status = { in: state.status };
 			}
 		},
+
 		statusFilterCleared: (state) => {
 			state.status = [];
 

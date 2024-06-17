@@ -28,8 +28,8 @@ import { useDispatch } from "react-redux";
 import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 
+import { PRIORITY_MENU_ITEMS } from "../lib/priority";
 import { defaultPriorityUpdated } from "../redux/create-tasks-slice";
-import { IconTaskPriority } from "./icon-task-priority";
 import { IconTaskStatus } from "./icon-task-status";
 
 const updateTaskSchema = TasksSchema.omit({
@@ -74,116 +74,88 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 				values: task,
 			}}
 		>
-			<div className="flex gap-2">
+			<App.Drawer.Header>
 				<h3>{i18n.task_details}</h3>
-				<App.AppDrawer.CloseButton />
-			</div>
+				<App.Drawer.CloseButton />
+			</App.Drawer.Header>
 
-			<hr />
-
-			<FormTextField className="mb-4" name="title">
-				<Label>{i18n.title}</Label>
-				<Input />
-			</FormTextField>
-
-			<FormTextField className="mb-4" name="description">
-				<Label>{i18n.description}</Label>
-				<TextArea />
-			</FormTextField>
-
-			<FormComboBox<TaskPriority>
-				className="mb-4"
-				items={[
-					{
-						id: "p0",
-						name: i18n.p0,
-						slotLeft: <IconTaskPriority priority="p0" />,
-					},
-					{
-						id: "p1",
-						name: i18n.p1,
-						slotLeft: <IconTaskPriority priority="p1" />,
-					},
-					{
-						id: "p2",
-						name: i18n.p2,
-						slotLeft: <IconTaskPriority priority="p2" />,
-					},
-					{
-						id: "p3",
-						name: i18n.p3,
-						slotLeft: <IconTaskPriority priority="p3" />,
-					},
-				]}
-				name="priority"
-				onSelectionChange={(p) => {
-					dispatch(
-						defaultPriorityUpdated(
-							// quirk of react-aria-components combobox
-							// means we lose type info on the key — meaning to open a PR
-							p?.toString() as TaskPriority,
-						),
-					);
-				}}
-			>
-				<Label>{i18n.priority}</Label>
-				<Group>
-					<ComboBoxInput unstyled />
-					<ComboBoxButton />
-				</Group>
-			</FormComboBox>
-
-			<FormComboBox<TaskStatus>
-				className="mb-4"
-				items={[
-					{
-						id: "to_do",
-						name: i18n.status_to_do,
-						slotLeft: <IconTaskStatus status="to_do" />,
-					},
-					{
-						id: "in_progress",
-						name: i18n.status_in_progress,
-						slotLeft: <IconTaskStatus status="in_progress" />,
-					},
-					{
-						id: "completed",
-						name: i18n.status_completed,
-						slotLeft: <IconTaskStatus status="completed" />,
-					},
-				]}
-				name="status"
-			>
-				<Label>{i18n.status}</Label>
-				<Group>
-					<ComboBoxInput unstyled />
-					<ComboBoxButton />
-				</Group>
-			</FormComboBox>
-
-			<div className="flex gap-2 justify-end">
-				<Button type="submit">{i18n.update}</Button>
-			</div>
-
-			<hr />
-
-			<DatePicker
-				className="mb-4"
-				isReadOnly
-				value={parseAbsoluteToLocal(task.created_at.toISOString())}
-			>
-				<Label>{i18n.created_at}</Label>
-				<DateInput />
-			</DatePicker>
-
-			<DatePicker
-				className="mb-4"
-				isReadOnly
-				value={parseAbsoluteToLocal(task.updated_at.toISOString())}
-			>
-				<Label>{i18n.updated_at}</Label>
-				<DateInput />
-			</DatePicker>
+			<App.Drawer.Content>
+				<FormTextField className="mb-4" name="title">
+					<Label>{i18n.title}</Label>
+					<Input />
+				</FormTextField>
+				<FormTextField className="mb-4" name="description">
+					<Label>{i18n.description}</Label>
+					<TextArea />
+				</FormTextField>
+				<FormComboBox<TaskPriority>
+					className="mb-4"
+					items={PRIORITY_MENU_ITEMS}
+					name="priority"
+					onSelectionChange={(p) => {
+						dispatch(
+							defaultPriorityUpdated(
+								// quirk of react-aria-components combobox
+								// means we lose type info on the key — meaning to open a PR
+								p?.toString() as TaskPriority,
+							),
+						);
+					}}
+				>
+					<Label>{i18n.priority}</Label>
+					<Group>
+						<ComboBoxInput unstyled />
+						<ComboBoxButton />
+					</Group>
+				</FormComboBox>
+				<FormComboBox<TaskStatus>
+					className="mb-4"
+					items={[
+						{
+							id: "to_do",
+							name: i18n.status_to_do,
+							slotLeft: <IconTaskStatus status="to_do" />,
+						},
+						{
+							id: "in_progress",
+							name: i18n.status_in_progress,
+							slotLeft: <IconTaskStatus status="in_progress" />,
+						},
+						{
+							id: "completed",
+							name: i18n.status_completed,
+							slotLeft: <IconTaskStatus status="completed" />,
+						},
+					]}
+					name="status"
+				>
+					<Label>{i18n.status}</Label>
+					<Group>
+						<ComboBoxInput unstyled />
+						<ComboBoxButton />
+					</Group>
+				</FormComboBox>
+				<div className="flex gap-2 justify-end">
+					<Button type="submit">{i18n.update}</Button>
+				</div>
+				<hr />
+				<DatePicker
+					className="mb-4"
+					isReadOnly
+					value={parseAbsoluteToLocal(task.created_at.toISOString())}
+				>
+					<Label>{i18n.created_at}</Label>
+					<DateInput />
+				</DatePicker>
+				<DatePicker
+					className="mb-4"
+					isReadOnly
+					value={parseAbsoluteToLocal(task.updated_at.toISOString())}
+				>
+					<Label>{i18n.updated_at}</Label>
+					<DateInput />
+				</DatePicker>
+			</App.Drawer.Content>
 		</Form>
 	);
 }

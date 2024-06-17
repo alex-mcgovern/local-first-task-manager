@@ -4,30 +4,11 @@ import { Button, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
 import { useDispatch } from "react-redux";
 
 import { useElectric } from "@shared/electric-sql";
-import * as i18n from "@shared/i18n";
 
+import { PRIORITY_MENU_ITEMS } from "../lib/priority";
 import { getPriorityString } from "../lib/strings";
 import { defaultPriorityUpdated } from "../redux/create-tasks-slice";
 import { IconTaskPriority } from "./icon-task-priority";
-
-const PRIORITY_ITEMS: { id: TaskPriority; label: string }[] = [
-	{
-		id: "p0",
-		label: i18n.p0,
-	},
-	{
-		id: "p1",
-		label: i18n.p1,
-	},
-	{
-		id: "p2",
-		label: i18n.p2,
-	},
-	{
-		id: "p3",
-		label: i18n.p3,
-	},
-];
 
 export function MenuTaskPriority({ id, priority }: { id: string; priority: TaskPriority }) {
 	const { db } = useElectric() || {};
@@ -57,17 +38,17 @@ export function MenuTaskPriority({ id, priority }: { id: string; priority: TaskP
 			<Popover placement="right top">
 				<Menu.DropdownMenu disabledKeys={[priority]} selectedKeys={[priority]}>
 					<Menu.Section>
-						{PRIORITY_ITEMS.map((t) => {
+						{PRIORITY_MENU_ITEMS.map((t) => {
 							return (
 								<Menu.Item
-									icon={<IconTaskPriority priority={t.id} />}
+									icon={t.slotLeft}
 									id={t.id}
 									key={t.id}
 									onAction={() => {
 										void updatePriority(id, t.id);
 									}}
 								>
-									{t.label}
+									{t.name}
 								</Menu.Item>
 							);
 						})}

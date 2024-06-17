@@ -35,6 +35,7 @@ import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 
 import { useLaunchDialog } from "../lib/keyboard-shortcuts";
+import { PRIORITY_MENU_ITEMS } from "../lib/priority";
 import {
 	createAnotherUpdated,
 	createTaskDialogOpenChange,
@@ -45,7 +46,6 @@ import {
 	selectTasksDefaultPriority,
 	selectTasksDefaultStatus,
 } from "../redux/create-tasks-slice";
-import { IconTaskPriority } from "./icon-task-priority";
 import { IconTaskStatus } from "./icon-task-status";
 
 import "../css/index.css";
@@ -136,28 +136,7 @@ function NewTaskFields({ close }: { close: () => void }) {
 
 			<FormComboBox<TaskPriority>
 				className="mb-4"
-				items={[
-					{
-						id: "p0",
-						name: i18n.p0,
-						slotLeft: <IconTaskPriority priority="p0" />,
-					},
-					{
-						id: "p1",
-						name: i18n.p1,
-						slotLeft: <IconTaskPriority priority="p1" />,
-					},
-					{
-						id: "p2",
-						name: i18n.p2,
-						slotLeft: <IconTaskPriority priority="p2" />,
-					},
-					{
-						id: "p3",
-						name: i18n.p3,
-						slotLeft: <IconTaskPriority priority="p3" />,
-					},
-				]}
+				items={PRIORITY_MENU_ITEMS}
 				name="priority"
 				onSelectionChange={(p) => {
 					dispatch(

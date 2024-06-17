@@ -1,7 +1,9 @@
-import type { PreselectedDatetimeRange } from "@shared/date";
+import type { PreselectedDateTimeRange } from "@shared/date";
 import type { task_statusType as TaskStatus } from "@shared/electric-sql";
 
+import { faClockRotateLeft } from "@fortawesome/pro-solid-svg-icons/faClockRotateLeft";
 import { faFilterList } from "@fortawesome/pro-solid-svg-icons/faFilterList";
+import { faTimes } from "@fortawesome/pro-solid-svg-icons/faTimes";
 import {
 	App,
 	Button,
@@ -27,6 +29,7 @@ import {
 	statusFilterApplied,
 	statusFilterCleared,
 } from "../redux/filter-tasks-slice";
+import { IconTaskStatus } from "./icon-task-status";
 
 function FilterControlTaskStatus() {
 	const filters = useSelector(selectTaskFilterStatus);
@@ -57,7 +60,7 @@ function FilterControlTaskStatus() {
 	);
 }
 
-const getDateRangeString = (date_range: PreselectedDatetimeRange) => {
+const getDateRangeString = (date_range: PreselectedDateTimeRange) => {
 	switch (date_range) {
 		case "last_30_days": {
 			return i18n.date_range_last_30_days;
@@ -150,6 +153,7 @@ function MenuTaskFilterStatus() {
 				{STATUS_MENU_ITEMS.map(({ id, label }) => {
 					return (
 						<Menu.Item
+							icon={<IconTaskStatus status={id} />}
 							id={id}
 							key={id}
 							onAction={() => {
@@ -165,6 +169,7 @@ function MenuTaskFilterStatus() {
 				<Menu.Item
 					color="red"
 					hideCheckbox
+					icon={<Icon color="red" icon={faTimes} />}
 					id="clear_filters"
 					isDisabled={activeFilters.length === 0}
 					onAction={() => {
@@ -178,14 +183,14 @@ function MenuTaskFilterStatus() {
 	);
 }
 
-const DUE_DATE_PAST_ITEMS: { id: PreselectedDatetimeRange; label: string }[] = [
+const DUE_DATE_PAST_ITEMS: { id: PreselectedDateTimeRange; label: string }[] = [
 	{ id: "last_hour", label: i18n.date_range_last_hour },
 	{ id: "last_day", label: i18n.date_range_last_day },
 	{ id: "last_7_days", label: i18n.date_range_last_7_days },
 	{ id: "last_90_days", label: i18n.date_range_last_90_days },
 ];
 
-const DUE_DATE_FUTURE_ITEMS: { id: PreselectedDatetimeRange; label: string }[] = [
+const DUE_DATE_FUTURE_ITEMS: { id: PreselectedDateTimeRange; label: string }[] = [
 	{ id: "next_hour", label: i18n.date_range_next_hour },
 	{ id: "next_day", label: i18n.date_range_next_day },
 	{ id: "next_7_days", label: i18n.date_range_next_7_days },
@@ -203,7 +208,9 @@ function MenuTaskFilterDueDate() {
 			selectionMode="single"
 		>
 			<Menu.Section>
-				<Menu.SectionHeader>{i18n.overdue}</Menu.SectionHeader>
+				<Menu.SectionHeader icon={<Icon icon={faClockRotateLeft} />}>
+					{i18n.overdue}
+				</Menu.SectionHeader>
 				{DUE_DATE_PAST_ITEMS.map(({ id, label }) => {
 					return (
 						<Menu.Item
@@ -219,7 +226,11 @@ function MenuTaskFilterDueDate() {
 				})}
 			</Menu.Section>
 			<Menu.Section>
-				<Menu.SectionHeader>{i18n.upcoming}</Menu.SectionHeader>
+				<Menu.SectionHeader
+					icon={<Icon icon={faClockRotateLeft} style={{ transform: "scaleX(-1)" }} />}
+				>
+					{i18n.upcoming}
+				</Menu.SectionHeader>
 				{DUE_DATE_FUTURE_ITEMS.map(({ id, label }) => {
 					return (
 						<Menu.Item
@@ -238,6 +249,7 @@ function MenuTaskFilterDueDate() {
 				<Menu.Item
 					color="red"
 					hideCheckbox
+					icon={<Icon color="red" icon={faTimes} />}
 					id="clear_filters"
 					isDisabled={!activeFilter}
 					onAction={() => {

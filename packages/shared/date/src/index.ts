@@ -37,7 +37,7 @@ type DateRange = {
 	to: Date;
 };
 
-export type PreselectedDatetimeRange =
+export type PreselectedDateTimeRange =
 	| "last_7_days"
 	| "last_30_days"
 	| "last_90_days"
@@ -52,10 +52,10 @@ export type PreselectedDatetimeRange =
 type RangeInput =
 	| DateRange
 	| ISOStringDatetimeRange
-	| PreselectedDatetimeRange
+	| PreselectedDateTimeRange
 	| ZonedDateTimeRange;
 
-const PRESELECTED_RANGES: PreselectedDatetimeRange[] = [
+const PRESELECTED_RANGES: PreselectedDateTimeRange[] = [
 	"last_7_days",
 	"last_30_days",
 	"last_90_days",
@@ -97,7 +97,7 @@ export class DateTimeRange {
 		);
 	}
 
-	private isInputPreselected(input: RangeInput): input is PreselectedDatetimeRange {
+	private isInputPreselected(input: RangeInput): input is PreselectedDateTimeRange {
 		return typeof input === "string" && PRESELECTED_RANGES.includes(input);
 	}
 
@@ -123,7 +123,7 @@ export class DateTimeRange {
 		};
 	}
 
-	private parsePreselected(dateRange: PreselectedDatetimeRange): ZonedDateTimeRange {
+	private parsePreselected(dateRange: PreselectedDateTimeRange): ZonedDateTimeRange {
 		switch (dateRange) {
 			case "last_hour": {
 				return {
@@ -211,10 +211,10 @@ export class DateTimeRange {
 		}
 	}
 
-	isPreselectedRange(): this is PreselectedDatetimeRange {
+	isPreselectedRange(): this is PreselectedDateTimeRange {
 		return (
 			typeof this === "string" &&
-			PRESELECTED_RANGES.includes(this as PreselectedDatetimeRange)
+			PRESELECTED_RANGES.includes(this as PreselectedDateTimeRange)
 		);
 	}
 

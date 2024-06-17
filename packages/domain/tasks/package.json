@@ -19,7 +19,7 @@
 		"@shared/i18n": "*",
 		"@shared/redux": "*",
 		"@shared/utils": "*",
-		"boondoggle": "^2.0.250",
+		"boondoggle": "^2.0.256",
 		"clsx": "2.1.1",
 		"react": "18.3.1",
 		"react-hook-form": "7.52.0",
