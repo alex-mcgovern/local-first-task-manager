@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"lib": ["es5", "dom"],
+		"strictNullChecks": true,
+		"target": "es5",
+		"types": ["cypress", "node", "@testing-library/cypress"]
+	},
+	"include": ["../cypress/**/*"]
+}

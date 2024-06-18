@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { ZonedDateTime } from "@internationalized/date";
 
 import type {
 	task_priorityType as TaskPriority,
@@ -6,7 +6,7 @@ import type {
 } from "@shared/electric-sql";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { parseAbsoluteToLocal } from "@internationalized/date";
+import { fromDate, getLocalTimeZone, parseAbsoluteToLocal } from "@internationalized/date";
 import {
 	App,
 	Button,
@@ -14,9 +14,14 @@ import {
 	ComboBoxInput,
 	DateInput,
 	DatePicker,
+	DatePickerButton,
+	DatePickerClearButton,
+	DatePickerPreset,
 	Form,
 	FormComboBox,
+	FormDatePicker,
 	FormTextField,
+	Grid,
 	Group,
 	Input,
 	Label,
@@ -24,6 +29,7 @@ import {
 } from "boondoggle";
 import { useLiveQuery } from "electric-sql/react";
 import { useDispatch } from "react-redux";
+import { z } from "zod";
 
 import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
@@ -34,9 +40,23 @@ import { IconTaskStatus } from "./icon-task-status";
 
 const updateTaskSchema = TasksSchema.omit({
 	created_at: true,
+	due_date: true,
 	id: true,
 	updated_at: true,
-});
+}).merge(
+	z.object({
+		// We have to intercept the `ZonedDateTime` object used
+		// by react-aria-components and convert it to a `Date`
+		due_date: z
+			.custom<ZonedDateTime>()
+			.optional()
+			.transform((v) => {
+				if (v) {
+					return v.toDate();
+				}
+			}),
+	}),
+);
 type UpdateTask = z.infer<typeof updateTaskSchema>;
 
 export function DrawerTaskDetails({ id }: { id: string }) {
@@ -47,20 +67,19 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 
 	const dispatch = useDispatch();
 
-	const { results: task } = useLiveQuery(db.tasks.liveUnique({ where: { id } }));
+	const { results: task } = useLiveQuery(
+		db.tasks.liveUnique({
+			where: { id },
+		}),
+	);
 
 	if (!task) {
 		return null;
 	}
 
-	const updateTask = async (t: Partial<UpdateTask>) => {
+	const updateTask = async (t: UpdateTask) => {
 		await db.tasks.update({
-			data: {
-				description: t.description,
-				status: t.status,
-				title: t.title,
-				updated_at: new Date(Date.now()),
-			},
+			data: t,
 			where: { id },
 		});
 	};
@@ -71,7 +90,12 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 			onSubmit={updateTask}
 			options={{
 				resolver: zodResolver(updateTaskSchema),
-				values: task,
+				values: {
+					description: task.description,
+					priority: task.priority,
+					status: task.status,
+					title: task.title,
+				},
 			}}
 		>
 			<App.Drawer.Header>
@@ -84,13 +108,67 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 					<Label>{i18n.title}</Label>
 					<Input />
 				</FormTextField>
+
 				<FormTextField className="mb-4" name="description">
 					<Label>{i18n.description}</Label>
 					<TextArea />
 				</FormTextField>
+
+				<FormDatePicker
+					className="mb-4"
+					data-testid="due_date"
+					name="due_date"
+					value={
+						task.due_date
+							? parseAbsoluteToLocal(task.due_date.toISOString())
+							: undefined
+					}
+				>
+					<Label>{i18n.due_date}</Label>
+					<Group>
+						<DateInput unstyled />
+						<DatePickerClearButton />
+						<DatePickerButton />
+					</Group>
+					<Grid className="mt-2" columns={3}>
+						<DatePickerPreset
+							date={fromDate(new Date(), getLocalTimeZone()).set({
+								hour: 18,
+								millisecond: 0,
+								minute: 0,
+								second: 0,
+							})}
+						>
+							{i18n.date_preset_today}
+						</DatePickerPreset>
+						<DatePickerPreset
+							date={fromDate(new Date(), getLocalTimeZone()).add({ days: 1 }).set({
+								hour: 18,
+								millisecond: 0,
+								minute: 0,
+								second: 0,
+							})}
+						>
+							{i18n.date_preset_tomorrow}
+						</DatePickerPreset>
+						<DatePickerPreset
+							date={fromDate(new Date(), getLocalTimeZone()).add({ weeks: 1 }).set({
+								hour: 18,
+								millisecond: 0,
+								minute: 0,
+								second: 0,
+							})}
+						>
+							{i18n.date_preset_1_week}
+						</DatePickerPreset>
+					</Grid>
+				</FormDatePicker>
+
+				<hr />
+
 				<FormComboBox<TaskPriority>
 					className="mb-4"
-					items={PRIORITY_MENU_ITEMS}
+					defaultItems={PRIORITY_MENU_ITEMS}
 					name="priority"
 					onSelectionChange={(p) => {
 						dispatch(
@@ -108,9 +186,10 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 						<ComboBoxButton />
 					</Group>
 				</FormComboBox>
+
 				<FormComboBox<TaskStatus>
 					className="mb-4"
-					items={[
+					defaultItems={[
 						{
 							id: "to_do",
 							name: i18n.status_to_do,
@@ -135,10 +214,13 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 						<ComboBoxButton />
 					</Group>
 				</FormComboBox>
+
 				<div className="flex gap-2 justify-end">
 					<Button type="submit">{i18n.update}</Button>
 				</div>
+
 				<hr />
+
 				<DatePicker
 					className="mb-4"
 					isReadOnly
@@ -147,6 +229,7 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 					<Label>{i18n.created_at}</Label>
 					<DateInput />
 				</DatePicker>
+
 				<DatePicker
 					className="mb-4"
 					isReadOnly

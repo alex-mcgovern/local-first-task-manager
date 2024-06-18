@@ -8,7 +8,6 @@ import { useCallback, useEffect } from "react";
 import { faCheckCircle } from "@fortawesome/pro-solid-svg-icons/faCheckCircle";
 import { faExclamationCircle } from "@fortawesome/pro-solid-svg-icons/faExclamationCircle";
 import { Icon, Pill, Table } from "boondoggle";
-import clsx from "clsx";
 import { useLiveQuery } from "electric-sql/react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -34,7 +33,7 @@ function DueDate({ date, status }: { date: Date; status: TaskStatus }) {
 	const isDone = status === "completed";
 
 	return (
-		<Pill className={isDone ? "line-through" : undefined} color={isOverdue ? "red" : undefined}>
+		<Pill color={isOverdue ? "red" : undefined}>
 			{isDone ? <Icon icon={faCheckCircle} /> : null}
 			{isOverdue ? <Icon icon={faExclamationCircle} /> : null}
 			{formatDateTime(date.toISOString())}
@@ -152,14 +151,7 @@ export function TableTasks() {
 								<Table.Cell center textValue={t.status}>
 									<MenuTaskStatus id={t.id} status={t.status} />
 								</Table.Cell>
-								<Table.Cell
-									className={clsx({
-										"line-through color-gray": t.status === "completed",
-									})}
-									textValue={t.title}
-								>
-									{t.title}
-								</Table.Cell>
+								<Table.Cell textValue={t.title}>{t.title}</Table.Cell>
 								<Table.Cell
 									className="color-gray"
 									right

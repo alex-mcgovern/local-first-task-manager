@@ -20,6 +20,15 @@ export function useLaunchDialog() {
 
 	return useEffect(() => {
 		const documentListener = (e: KeyboardEvent) => {
+			const target = e.target as HTMLElement;
+			if (
+				target.tagName === "INPUT" ||
+				target.tagName === "TEXTAREA" ||
+				target.isContentEditable
+			) {
+				return;
+			}
+
 			if (!is_create_task_dialog_open && e.key === "c") {
 				e.preventDefault();
 

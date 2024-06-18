@@ -1,3 +1,5 @@
+import type { ZonedDateTime } from "@internationalized/date";
+
 import type {
 	task_priorityType as TaskPriority,
 	task_statusType as TaskStatus,
@@ -7,17 +9,21 @@ import { useEffect, useRef } from "react";
 
 import { faPlus } from "@fortawesome/pro-solid-svg-icons/faPlus";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { fromDate, getLocalTimeZone } from "@internationalized/date";
 import {
 	Button,
 	ComboBoxButton,
 	ComboBoxInput,
 	DateInput,
 	DatePickerButton,
+	DatePickerClearButton,
+	DatePickerPreset,
 	Dialog,
 	Form,
 	FormComboBox,
 	FormDatePicker,
 	FormTextField,
+	Grid,
 	Group,
 	Icon,
 	Input,
@@ -68,7 +74,16 @@ const createTaskSchema = TasksSchema.omit({
 }).merge(
 	z.object({
 		description: z.string().optional(),
-		due_date: z.coerce.date().optional(),
+		// We have to intercept the `ZonedDateTime` object used
+		// by react-aria-components and convert it to a `Date`
+		due_date: z
+			.custom<ZonedDateTime>()
+			.optional()
+			.transform((v) => {
+				if (v) {
+					return v.toDate();
+				}
+			}),
 	}),
 );
 type CreateTask = z.infer<typeof createTaskSchema>;
@@ -124,19 +139,57 @@ function NewTaskFields({ close }: { close: () => void }) {
 				<TextArea />
 			</FormTextField>
 
-			<FormDatePicker className="mb-4" granularity="minute" name="due_date">
+			<FormDatePicker
+				className="mb-4"
+				data-testid="due_date"
+				granularity="minute"
+				name="due_date"
+			>
 				<Label>{i18n.due_date}</Label>
 				<Group>
 					<DateInput unstyled />
+					<DatePickerClearButton />
 					<DatePickerButton />
 				</Group>
+				<Grid className="mt-2" columns={3}>
+					<DatePickerPreset
+						date={fromDate(new Date(), getLocalTimeZone()).set({
+							hour: 18,
+							millisecond: 0,
+							minute: 0,
+							second: 0,
+						})}
+					>
+						{i18n.date_preset_today}
+					</DatePickerPreset>
+					<DatePickerPreset
+						date={fromDate(new Date(), getLocalTimeZone()).add({ days: 1 }).set({
+							hour: 18,
+							millisecond: 0,
+							minute: 0,
+							second: 0,
+						})}
+					>
+						{i18n.date_preset_tomorrow}
+					</DatePickerPreset>
+					<DatePickerPreset
+						date={fromDate(new Date(), getLocalTimeZone()).add({ weeks: 1 }).set({
+							hour: 18,
+							millisecond: 0,
+							minute: 0,
+							second: 0,
+						})}
+					>
+						{i18n.date_preset_1_week}
+					</DatePickerPreset>
+				</Grid>
 			</FormDatePicker>
 
 			<hr />
 
 			<FormComboBox<TaskPriority>
 				className="mb-4"
-				items={PRIORITY_MENU_ITEMS}
+				defaultItems={PRIORITY_MENU_ITEMS}
 				name="priority"
 				onSelectionChange={(p) => {
 					dispatch(
@@ -157,7 +210,7 @@ function NewTaskFields({ close }: { close: () => void }) {
 
 			<FormComboBox<TaskStatus>
 				className="mb-4"
-				items={[
+				defaultItems={[
 					{
 						id: "to_do",
 						name: i18n.status_to_do,

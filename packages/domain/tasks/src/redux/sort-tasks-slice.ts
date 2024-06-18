@@ -20,7 +20,10 @@ type State = {
 	sort_descriptor: SortDescriptor | undefined;
 };
 
-const initial_state: State = { order_by_clause: { status: "desc" }, sort_descriptor: undefined };
+const initial_state: State = {
+	order_by_clause: { status: "desc" },
+	sort_descriptor: { column: "status", direction: "descending" },
+};
 
 const sortTasksSlice = createSlice({
 	initialState: initial_state,

@@ -2,7 +2,7 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
 	e2e: {
-		baseUrl: "http://localhost:3000/",
+		baseUrl: "http://localhost:5173/",
 		excludeSpecPattern: ["**/*/_*.cy.ts"],
 		retries: {
 			runMode: 3,
@@ -12,6 +12,6 @@ export default defineConfig({
 		video: false,
 	},
 	env: {
-		CYPRESS_BASE_URL: "http://localhost:3000/",
+		CYPRESS_BASE_URL: "http://localhost:5173/",
 	},
 });
