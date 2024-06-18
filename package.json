@@ -39,7 +39,7 @@
 		"@shared/components": "*",
 		"@shared/electric-sql": "*",
 		"@shared/redux": "*",
-		"boondoggle": "^2.0.265",
+		"boondoggle": "^2.0.271",
 		"electric-sql": "0.12.0",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",

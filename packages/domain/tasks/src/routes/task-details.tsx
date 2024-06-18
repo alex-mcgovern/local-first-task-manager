@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { App } from "boondoggle";
+import { App, DialogTrigger } from "boondoggle";
 import { navigate } from "wouter/use-browser-location";
 
 import { DrawerTaskDetails } from "../components/drawer-task-details";
@@ -16,7 +16,7 @@ export function TaskDetails({ id }: { id: string }) {
 	}, [id]);
 
 	return (
-		<App.Drawer.Root
+		<DialogTrigger
 			isOpen={is_open}
 			onOpenChange={(o) => {
 				setIsOpen(o);
@@ -25,7 +25,9 @@ export function TaskDetails({ id }: { id: string }) {
 				}
 			}}
 		>
-			<DrawerTaskDetails id={id} />
-		</App.Drawer.Root>
+			<App.Drawer.Root>
+				<DrawerTaskDetails id={id} />
+			</App.Drawer.Root>
+		</DialogTrigger>
 	);
 }

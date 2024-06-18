@@ -10,7 +10,7 @@
 	"type": "module",
 	"main": "./src/index.ts",
 	"dependencies": {
-		"@internationalized/date": "3.5.2",
+		"@internationalized/date": "3.5.4",
 		"@shared/utils": "*",
 		"zod": "3.21.1"
 	}

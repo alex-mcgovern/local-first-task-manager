@@ -83,8 +83,8 @@ describe("Tasks", () => {
 
 		// With required fields only
 
-		const title_1 = faker.hacker.phrase();
-		const title_2 = faker.hacker.phrase();
+		const title_1 = faker.git.commitMessage();
+		const title_2 = faker.git.commitMessage();
 
 		cy.findByText(i18n.new_task).click();
 
@@ -116,8 +116,8 @@ describe("Tasks", () => {
 
 		// With required fields only
 
-		const title_1 = faker.hacker.phrase();
-		const title_2 = faker.hacker.phrase();
+		const title_1 = faker.git.commitMessage();
+		const title_2 = faker.git.commitMessage();
 
 		const description_1 = faker.lorem.paragraph();
 		const description_2 = faker.lorem.paragraph();
@@ -150,10 +150,8 @@ describe("Tasks", () => {
 			.within(() => {
 				cy.findByLabelText(i18n.title).should("have.value", title_1).clear().type(title_2);
 
-				cy.findByLabelText(i18n.description)
-					.should("have.value", description_1)
-					.clear()
-					.type(description_2);
+				cy.findByLabelText(i18n.description).should("have.value", description_1).clear();
+				cy.findByLabelText(i18n.description).type(description_2);
 
 				cy.findByTestId("due_date").within(() => {
 					assertDueDateInput(due_date_1);
@@ -167,5 +165,42 @@ describe("Tasks", () => {
 			});
 
 		cy.findAllByRole("row").contains(title_2).should("exist").click();
+	});
+
+	it("Deleting a task that is open works closes dialog and navigates to home", () => {
+		cy.visit("/");
+
+		const title = faker.git.commitMessage();
+
+		cy.findByText(i18n.new_task).click();
+
+		cy.findByRole("dialog")
+			.should("be.visible")
+			.within(() => {
+				// Expect input to be focused
+				cy.findByLabelText(i18n.title).should("have.focus").type(title);
+				cy.findByText(i18n.submit).click();
+			});
+
+		cy.findAllByRole("row").contains(title).should("exist").click();
+		cy.url().should("match", /\/tasks\/[0-9a-f-]+/);
+
+		cy.get("#app-drawer-container").should("be.visible");
+
+		// Move focus out of the drawer
+		cy.get("body").click(0, 0);
+
+		cy.findAllByRole("row")
+			.contains(title)
+			.should("exist")
+			.parent()
+			.within(() => {
+				cy.get("label[slot=selection]").click();
+			});
+
+		cy.findByText(`${i18n.delete_selected} (1)`).click();
+
+		cy.findAllByRole("row").contains(title).should("not.exist");
+		cy.get("#app-drawer-container").should("be.empty");
 	});
 });
