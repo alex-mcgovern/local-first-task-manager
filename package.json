@@ -31,7 +31,7 @@
 		"fix-prettier": "prettier . --write --log-level warn",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"prepare": "husky",
-		"preview": "vite preview"
+		"preview": "vite preview --port 5173"
 	},
 	"dependencies": {
 		"@domain/tasks": "*",
