@@ -33,9 +33,15 @@ Managing dependencies and versioning across monorepos can become a pain, especia
 
 ### Data persistence
 
-In lieue of the recommended local storage, I opted to use [ElectricSQL](https://electric-sql.com/). I had wanted to experiment with a local first web app anyway, and this seemed to be a good opportunity to do so.
+In lieue of the recommended local storage, I opted to use [ElectricSQL](https://electric-sql.com/) (which is an alpha stage product). I had wanted to experiment with a local first web app anyway, and this seemed to be a good opportunity to do so.
 
 This didn't complicate the project very much at all, and if anything, the code-gen to generate schemas and types probably sped development up a bit. The backend is deployed with Digital Ocean (for speed, as ElectricSQL have a fairly straightforward guide), but could be deployed anywhere you can run Docker and Postgres with logical replication. The backend setup is intentionally very simple, as the focus of this project is the frontend.
+
+After trialing Electric SQL for this project, I don't think it's quite ready for production. It has a few limitations (that I've come across so far), that would proclude me from using for something more serious:
+
+- Updating "electrified" enum values is not possible
+- No support for VARCHAR with a length constraint (hello DDoS)
+- "Un-electrifiying" a table is not possible at this point (but is WIP), making it impossible to drop a table
 
 ### State management
 
