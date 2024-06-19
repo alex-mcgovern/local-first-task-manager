@@ -87,6 +87,8 @@ jobs:
 
             - name: Build
               run: npm install && npm run build
+              env:
+                  ELECTRIC_SERVICE: ${{ vars.ELECTRIC_SERVICE }}
 
             - name: Publish
               uses: cloudflare/pages-action@1
