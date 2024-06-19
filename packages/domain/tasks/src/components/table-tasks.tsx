@@ -25,8 +25,8 @@ import {
 	selectTasksSortDescriptor,
 } from "../redux/sort-tasks-slice";
 import { MenuTaskActions } from "./menu-task-actions";
+import { MenuTaskPriority } from "./menu-task-priority";
 import { MenuTaskStatus } from "./menu-task-status";
-import { MenuTaskPriority } from "./priority";
 
 function DueDate({ date, status }: { date: Date; status: TaskStatus }) {
 	const isOverdue: boolean = status !== "completed" && date < new Date();
@@ -47,7 +47,12 @@ function DueDate({ date, status }: { date: Date; status: TaskStatus }) {
 
 /**
  * Hook to manage sorting of the tasks table.
- * @returns The current sort descriptor (required by react-aria-components Table) and a function to update the sort descriptor.
+ * Returns the current sort descriptor (required by react-aria-components Table)
+ * and a function to update the sort descriptor, and a function to handle dispatching the sort action.
+ *
+ * Note: Usually would try to encapsulate the sort logic in the reducer, but the Table component
+ * returns the column as `Key` without type information, so doing a little pre-processing here to ensure
+ * valid state. Could probably be refactored to move the processing into the reducer.
  */
 function useTableSorting() {
 	const dispatch = useDispatch();
@@ -79,6 +84,10 @@ function useTableSorting() {
 	return { sort_descriptor, updateSort };
 }
 
+/**
+ * Hook to fetch tasks from the Electric database.
+ * Abstracted here to separate concerns and make the component more readable.
+ */
 function useDbTasks(): Task[] {
 	const { db } = useElectric() || {};
 	if (!db) {
@@ -107,6 +116,9 @@ function useDbTasks(): Task[] {
 	return results ?? [];
 }
 
+/**
+ * A table of tasks, with sorting, selection, and actions.
+ */
 export function TableTasks() {
 	const dispatch = useDispatch();
 	const tasks = useDbTasks();

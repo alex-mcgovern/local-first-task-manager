@@ -4,6 +4,9 @@ import { Button, Icon, Menu, Popover } from "boondoggle";
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 
+/**
+ * A menu that is rendered on each table row, and allows options for the task.
+ */
 export function MenuTaskActions({ id }: { id: string }) {
 	const { db } = useElectric() || {};
 	if (!db) {

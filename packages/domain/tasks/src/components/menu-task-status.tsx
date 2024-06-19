@@ -23,6 +23,9 @@ const STATUS_ITEMS: { id: TaskStatus; label: string }[] = [
 	},
 ];
 
+/**
+ * A menu that is rendered on each table row, and allows quickly changing the task's status.
+ */
 export function MenuTaskStatus({ id, status }: { id: string; status: TaskStatus }) {
 	const { db } = useElectric() || {};
 	if (!db) {

@@ -1,7 +1,8 @@
-import type { CalendarDate } from "@internationalized/date";
+// Utilities for managing dates and times
+// - fns for formatting dates or date times from ISO strings
+// - a class for managing date ranges and converting them between different formats
 
 import { ZonedDateTime, fromDate, now, parseAbsolute } from "@internationalized/date";
-import { z } from "zod";
 
 import { exhaustiveSwitchGuard } from "@shared/utils";
 
@@ -233,13 +234,3 @@ export class DateTimeRange {
 		};
 	}
 }
-
-export const zodCalendarDate = z
-	.union([z.custom<CalendarDate>(), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)])
-	.transform((value) => {
-		if (typeof value === "string") {
-			return value;
-		}
-
-		return value.toString();
-	});

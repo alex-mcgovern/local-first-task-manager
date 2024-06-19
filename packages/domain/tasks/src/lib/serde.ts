@@ -1,5 +1,6 @@
-// Because a Set is not serializable, we need to convert
-// it to an array before storing it in the Redux store.
+// Because a Set (the default type for a Table selection)
+// is not serializable, we need to convert it to an array
+// before storing it in the Redux store.
 
 // eslint-disable-next-line no-restricted-imports -- usually discourage direct import from `react-aria-components`, but this is necessary
 import type { Selection } from "react-aria-components";

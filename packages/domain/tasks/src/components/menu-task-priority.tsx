@@ -5,11 +5,14 @@ import { useDispatch } from "react-redux";
 
 import { useElectric } from "@shared/electric-sql";
 
-import { PRIORITY_MENU_ITEMS } from "../lib/priority";
+import { PRIORITY_MENU_ITEMS } from "../lib/priority-menu-items";
 import { getPriorityString } from "../lib/strings";
 import { defaultPriorityUpdated } from "../redux/create-tasks-slice";
 import { IconTaskPriority } from "./icon-task-priority";
 
+/**
+ * A menu that is rendered on each table row, and allows quickly changing the task's priority.
+ */
 export function MenuTaskPriority({ id, priority }: { id: string; priority: TaskPriority }) {
 	const { db } = useElectric() || {};
 	if (!db) {

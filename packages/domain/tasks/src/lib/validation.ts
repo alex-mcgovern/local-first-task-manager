@@ -1,3 +1,9 @@
+// Because of how `react-aria-components` (An Adobe open source UI library) <Table> component works, we lose type information
+// on column IDs. These type predicates are simple runtime checks that help fill this gap.
+//
+// Aside: I believe this problem is fixable in `react-aria-components` with generics, and
+// have been meaning to open a PR (or at least an issue) to address this.
+
 import type { Tasks as Task, task_priorityType as TaskPriority } from "@shared/electric-sql";
 import type { ExhaustiveArray } from "@shared/utils";
 

@@ -41,7 +41,7 @@ import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 
 import { useLaunchDialog } from "../lib/keyboard-shortcuts";
-import { PRIORITY_MENU_ITEMS } from "../lib/priority";
+import { PRIORITY_MENU_ITEMS } from "../lib/priority-menu-items";
 import {
 	createAnotherUpdated,
 	createTaskDialogOpenChange,
@@ -73,9 +73,11 @@ const createTaskSchema = TasksSchema.omit({
 	updated_at: true,
 }).merge(
 	z.object({
+		// There's a bug in Electric SQL / Prisma where the `description` field
+		// is inferred as `nullish` rather than `optional`. This is a workaround for now.
 		description: z.string().optional(),
-		// We have to intercept the `ZonedDateTime` object used
-		// by react-aria-components and convert it to a `Date`
+		// The `DatePicker` component returns a `ZonedDateTime` object
+		// which we can convert to a `Date` when writing to the db.
 		due_date: z
 			.custom<ZonedDateTime>()
 			.optional()
@@ -275,10 +277,6 @@ export function DialogNewTask() {
 	const create_another = useSelector(selectTasksCreateAnother);
 
 	// Default values for the task creation form.
-	// - `default_status` is updated when the user selects a status
-	// during task creation.
-	// - `default_priority` is updated whenever the user edits a
-	// priority on any task, in addition to during task creation.
 	const default_status = useSelector(selectTasksDefaultStatus);
 	const default_priority = useSelector(selectTasksDefaultPriority);
 

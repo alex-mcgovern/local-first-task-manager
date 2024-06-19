@@ -1,6 +1,5 @@
 *.hbs
 .git
-docs
 node_modules
 tmp
 *.md

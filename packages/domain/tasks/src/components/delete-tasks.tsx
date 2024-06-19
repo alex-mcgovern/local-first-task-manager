@@ -21,6 +21,10 @@ function getDeleteLabel(selectedTasks: Selection) {
 	return `${i18n.delete_selected} (${selectedTasks.size})`;
 }
 
+/**
+ * A button to delete the selected tasks.
+ * Note: This component is only visible when there are tasks selected.
+ */
 export function ButtonDeleteTasks() {
 	const selected = deserializeSelection(useSelector(selectTasksSelection));
 	const dispatch = useDispatch();

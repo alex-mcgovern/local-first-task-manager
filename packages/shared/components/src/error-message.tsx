@@ -7,6 +7,10 @@ import * as i18n from "@shared/i18n";
 
 import "../css/index.css";
 
+/**
+ * A fallback component to display when an error occurs.
+ * This is used by the ErrorBoundary component provided by Sentry.
+ */
 export function ErrorMessage({ error, resetError }: Parameters<FallbackRender>[0]) {
 	const { message, name } =
 		error instanceof Error

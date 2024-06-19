@@ -1,6 +1,9 @@
 import { insecureAuthToken } from "electric-sql/auth";
 import { genUUID } from "electric-sql/util";
 
+// Note: This is untouched from the electric-sql starter.
+// Auth may be something I add in future, but for this task is out-of-scope.
+
 // Generate an insecure authentication JWT.
 // See https://electric-sql.com/docs/usage/auth for more details.
 export const authToken = () => {

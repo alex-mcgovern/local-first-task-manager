@@ -13,6 +13,8 @@ import {
  * Note: In a production application, this would likely be expanded a global shortcut hook, that
  * could open any dialog from any point in the application. Which would mean moving it out of the
  * tasks domain and into a more global location.
+ *
+ * As it currently stands, that might be overcooking it, so it's left here for now.
  */
 export function useLaunchDialog() {
 	const is_create_task_dialog_open = useSelector(selectIsCreateTaskDialogOpen);

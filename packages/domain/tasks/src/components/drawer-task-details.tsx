@@ -34,7 +34,7 @@ import { z } from "zod";
 import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 
-import { PRIORITY_MENU_ITEMS } from "../lib/priority";
+import { PRIORITY_MENU_ITEMS } from "../lib/priority-menu-items";
 import { isPriorityKey } from "../lib/validation";
 import { defaultPriorityUpdated } from "../redux/create-tasks-slice";
 import { IconTaskStatus } from "./icon-task-status";
@@ -46,13 +46,16 @@ const updateTaskSchema = TasksSchema.omit({
 	updated_at: true,
 }).merge(
 	z.object({
-		// We have to intercept the `ZonedDateTime` object used
-		// by react-aria-components and convert it to a `Date`
+		// The `DatePicker` component returns a `ZonedDateTime` object
+		// which we can convert to a `Date` when writing to the db.
 		due_date: z.custom<ZonedDateTime>().nullable(),
 	}),
 );
 type UpdateTask = z.infer<typeof updateTaskSchema>;
 
+/**
+ * A slide out dialog, styled as a drawer, that allows editing a task.
+ */
 export function DrawerTaskDetails({ id }: { id: string }) {
 	const { db } = useElectric() || {};
 	if (!db) {
@@ -93,8 +96,7 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 				},
 			}}
 		>
-			<App.Drawer.Header>
-				<h3>{i18n.task_details}</h3>
+			<App.Drawer.Header title={i18n.task_details}>
 				<App.Drawer.CloseButton />
 			</App.Drawer.Header>
 

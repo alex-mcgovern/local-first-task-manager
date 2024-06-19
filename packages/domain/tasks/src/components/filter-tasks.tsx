@@ -17,9 +17,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import * as i18n from "@shared/i18n";
-import { exhaustiveSwitchGuard } from "@shared/utils";
 
-import { getStatusString } from "../lib/strings";
+import { getDateRangeString, getStatusString } from "../lib/strings";
 import {
 	dueDateFilterApplied,
 	dueDateFilterCleared,
@@ -31,6 +30,10 @@ import {
 } from "../redux/filter-tasks-slice";
 import { IconTaskStatus } from "./icon-task-status";
 
+/**
+ * A group of elements, showing the current state of
+ * the "status" filter, and options to update or remove it.
+ */
 function FilterControlTaskStatus() {
 	const filters = useSelector(selectTaskFilterStatus);
 	const dispatch = useDispatch();
@@ -60,44 +63,10 @@ function FilterControlTaskStatus() {
 	);
 }
 
-const getDateRangeString = (date_range: PreselectedDateTimeRange) => {
-	switch (date_range) {
-		case "last_30_days": {
-			return i18n.date_range_last_30_days;
-		}
-		case "last_7_days": {
-			return i18n.date_range_last_7_days;
-		}
-		case "last_90_days": {
-			return i18n.date_range_last_90_days;
-		}
-		case "last_day": {
-			return i18n.date_range_last_day;
-		}
-		case "last_hour": {
-			return i18n.date_range_last_hour;
-		}
-		case "next_30_days": {
-			return i18n.date_range_next_30_days;
-		}
-		case "next_7_days": {
-			return i18n.date_range_next_7_days;
-		}
-		case "next_90_days": {
-			return i18n.date_range_next_90_days;
-		}
-		case "next_day": {
-			return i18n.date_range_next_day;
-		}
-		case "next_hour": {
-			return i18n.date_range_next_hour;
-		}
-		default: {
-			return exhaustiveSwitchGuard(date_range);
-		}
-	}
-};
-
+/**
+ * A group of elements, showing the current state of
+ * the "due date" filter, and options to update or remove it.
+ */
 function FilterControlDueDate() {
 	const filter = useSelector(selectTaskFilterDueDate);
 	const dispatch = useDispatch();
@@ -128,7 +97,7 @@ function FilterControlDueDate() {
 }
 
 /**
- * A dropdown menu for filtering all tasks by status.
+ * A dropdown menu for filtering all tasks by "status".
  * Triggered either from the menu of all available filters,
  * or from the button showing the state of this filter.
  */
@@ -182,6 +151,12 @@ function MenuTaskFilterStatus() {
 		</Menu.DropdownMenu>
 	);
 }
+
+/**
+ * A dropdown menu for filtering all tasks by "due date".
+ * Triggered either from the menu of all available filters,
+ * or from the button showing the state of this filter.
+ */
 
 const DUE_DATE_PAST_ITEMS: { id: PreselectedDateTimeRange; label: string }[] = [
 	{ id: "last_hour", label: i18n.date_range_last_hour },
@@ -263,6 +238,11 @@ function MenuTaskFilterDueDate() {
 	);
 }
 
+/**
+ * A dropdown menu with sub-menus, that allows setting all available filters.
+ * If any filters are currently applied, it will render a more subtle, smaller button.
+ */
+
 function MenuTaskFilters() {
 	const is_filtered = useSelector(selectAreTasksFiltered);
 
@@ -298,6 +278,9 @@ function MenuTaskFilters() {
 	);
 }
 
+/**
+ * A toolbar that composes all of the filtering options for tasks.
+ */
 export function ToolbarTaskFilters() {
 	return (
 		<App.Main.Toolbar>

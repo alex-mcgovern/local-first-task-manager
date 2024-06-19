@@ -1,3 +1,6 @@
+// Some simple functions to convert enums to strings for use throughout this domain.
+
+import type { PreselectedDateTimeRange } from "@shared/date";
 import type {
 	task_priorityType as TaskPriority,
 	task_statusType as TaskStatus,
@@ -5,6 +8,44 @@ import type {
 
 import * as i18n from "@shared/i18n";
 import { exhaustiveSwitchGuard } from "@shared/utils";
+
+export const getDateRangeString = (date_range: PreselectedDateTimeRange) => {
+	switch (date_range) {
+		case "last_30_days": {
+			return i18n.date_range_last_30_days;
+		}
+		case "last_7_days": {
+			return i18n.date_range_last_7_days;
+		}
+		case "last_90_days": {
+			return i18n.date_range_last_90_days;
+		}
+		case "last_day": {
+			return i18n.date_range_last_day;
+		}
+		case "last_hour": {
+			return i18n.date_range_last_hour;
+		}
+		case "next_30_days": {
+			return i18n.date_range_next_30_days;
+		}
+		case "next_7_days": {
+			return i18n.date_range_next_7_days;
+		}
+		case "next_90_days": {
+			return i18n.date_range_next_90_days;
+		}
+		case "next_day": {
+			return i18n.date_range_next_day;
+		}
+		case "next_hour": {
+			return i18n.date_range_next_hour;
+		}
+		default: {
+			return exhaustiveSwitchGuard(date_range);
+		}
+	}
+};
 
 export function getStatusString(status: TaskStatus) {
 	switch (status) {
