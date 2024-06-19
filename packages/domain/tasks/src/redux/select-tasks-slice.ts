@@ -2,7 +2,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 import type { RootState } from "@shared/redux";
 
-import type { SerializableSelection } from "../lib/selection";
+import type { SerializableSelection } from "../lib/serde";
 
 import { createSlice } from "@reduxjs/toolkit";
 

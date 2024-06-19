@@ -29,7 +29,12 @@ export function MenuTaskPriority({ id, priority }: { id: string; priority: TaskP
 	return (
 		<Menu.Trigger>
 			<TooltipTrigger delay={1000}>
-				<Button appearance="ghost" size="sm" square>
+				<Button
+					appearance="ghost"
+					data-testid={`menu_priority_${priority}`}
+					size="sm"
+					square
+				>
 					<IconTaskPriority priority={priority} />
 				</Button>
 				<Tooltip placement="bottom">{getPriorityString(priority)}</Tooltip>

@@ -33,7 +33,10 @@ const filterTasksSlice = createSlice({
 			const { from, to } = new DateTimeRange(action.payload).range;
 
 			if (state.where_clause) {
-				state.where_clause.due_date = { gte: from.toDate(), lte: to.toDate() };
+				state.where_clause.due_date = {
+					gte: from.toAbsoluteString(),
+					lte: to.toAbsoluteString(),
+				};
 			}
 		},
 

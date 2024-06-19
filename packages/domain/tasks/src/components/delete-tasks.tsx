@@ -11,7 +11,7 @@ import { useLocation } from "wouter";
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 
-import { deserializeSelection } from "../lib/selection";
+import { deserializeSelection } from "../lib/serde";
 import { selectTasksSelection, selectionUpdated } from "../redux/select-tasks-slice";
 
 function getDeleteLabel(selectedTasks: Selection) {

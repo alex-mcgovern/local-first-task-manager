@@ -15,7 +15,7 @@ import { formatDateTime } from "@shared/date";
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 
-import { deserializeSelection, serializeSelection } from "../lib/selection";
+import { deserializeSelection, serializeSelection } from "../lib/serde";
 import { isTaskKey } from "../lib/validation";
 import { selectTaskFilterWhereClause } from "../redux/filter-tasks-slice";
 import { selectTasksSelection, selectionUpdated } from "../redux/select-tasks-slice";
@@ -29,11 +29,15 @@ import { MenuTaskStatus } from "./menu-task-status";
 import { MenuTaskPriority } from "./priority";
 
 function DueDate({ date, status }: { date: Date; status: TaskStatus }) {
-	const isOverdue = status !== "completed" && date < new Date();
+	const isOverdue: boolean = status !== "completed" && date < new Date();
 	const isDone = status === "completed";
 
 	return (
-		<Pill color={isOverdue ? "red" : undefined}>
+		<Pill
+			color={isOverdue ? "red" : undefined}
+			data-overdue={isOverdue.toString()}
+			data-testid="due-date"
+		>
 			{isDone ? <Icon icon={faCheckCircle} /> : null}
 			{isOverdue ? <Icon icon={faExclamationCircle} /> : null}
 			{formatDateTime(date.toISOString())}
@@ -121,24 +125,24 @@ export function TableTasks() {
 				selectionMode="multiple"
 				sortDescriptor={sort_descriptor}
 			>
-				<Table.Header>
-					<Table.Column allowsSorting center id="priority" sticky width={28}>
+				<Table.Header sticky>
+					<Table.Column allowsSorting center id="priority" width={28}>
 						{i18n.priority}
 					</Table.Column>
 
-					<Table.Column allowsSorting center id="status" sticky width={28}>
+					<Table.Column allowsSorting center id="status" width={28}>
 						{i18n.status}
 					</Table.Column>
 
-					<Table.Column allowsSorting id="title" isRowHeader sticky>
+					<Table.Column allowsSorting id="title" isRowHeader>
 						{i18n.title}
 					</Table.Column>
 
-					<Table.Column allowsSorting id="due_date" right sticky width="1fr">
+					<Table.Column allowsSorting id="due_date" right width="1fr">
 						{i18n.due_date}
 					</Table.Column>
 
-					<Table.Column right sticky width={48} />
+					<Table.Column right width={48} />
 				</Table.Header>
 
 				<Table.Body>

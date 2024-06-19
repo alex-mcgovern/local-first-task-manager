@@ -35,6 +35,7 @@ import { TasksSchema, useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
 
 import { PRIORITY_MENU_ITEMS } from "../lib/priority";
+import { isPriorityKey } from "../lib/validation";
 import { defaultPriorityUpdated } from "../redux/create-tasks-slice";
 import { IconTaskStatus } from "./icon-task-status";
 
@@ -47,14 +48,7 @@ const updateTaskSchema = TasksSchema.omit({
 	z.object({
 		// We have to intercept the `ZonedDateTime` object used
 		// by react-aria-components and convert it to a `Date`
-		due_date: z
-			.custom<ZonedDateTime>()
-			.optional()
-			.transform((v) => {
-				if (v) {
-					return v.toDate();
-				}
-			}),
+		due_date: z.custom<ZonedDateTime>().nullable(),
 	}),
 );
 type UpdateTask = z.infer<typeof updateTaskSchema>;
@@ -79,7 +73,7 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 
 	const updateTask = async (t: UpdateTask) => {
 		await db.tasks.update({
-			data: t,
+			data: { ...t, due_date: t.due_date ? t.due_date.toDate() : null },
 			where: { id },
 		});
 	};
@@ -92,6 +86,7 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 				resolver: zodResolver(updateTaskSchema),
 				values: {
 					description: task.description,
+					due_date: task.due_date ? fromDate(task.due_date, getLocalTimeZone()) : null,
 					priority: task.priority,
 					status: task.status,
 					title: task.title,
@@ -114,16 +109,7 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 					<TextArea />
 				</FormTextField>
 
-				<FormDatePicker
-					className="mb-4"
-					data-testid="due_date"
-					name="due_date"
-					value={
-						task.due_date
-							? parseAbsoluteToLocal(task.due_date.toISOString())
-							: undefined
-					}
-				>
+				<FormDatePicker className="mb-4" data-testid="due_date" name="due_date">
 					<Label>{i18n.due_date}</Label>
 					<Group>
 						<DateInput unstyled />
@@ -171,13 +157,13 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 					defaultItems={PRIORITY_MENU_ITEMS}
 					name="priority"
 					onSelectionChange={(p) => {
-						dispatch(
-							defaultPriorityUpdated(
-								// quirk of react-aria-components combobox
-								// means we lose type info on the key — meaning to open a PR
-								p?.toString() as TaskPriority,
-							),
-						);
+						// A quirk of react-aria-components combobox and
+						// Boondoggle's implementation means we lose type
+						// info on the key — I've been meaning to open a PR.
+						const k = p?.toString();
+						if (k && isPriorityKey(k)) {
+							dispatch(defaultPriorityUpdated(k));
+						}
 					}}
 				>
 					<Label>{i18n.priority}</Label>

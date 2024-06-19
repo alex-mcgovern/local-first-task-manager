@@ -1,7 +1,7 @@
-import type { Tasks as Task } from "@shared/electric-sql";
+import type { Tasks as Task, task_priorityType as TaskPriority } from "@shared/electric-sql";
 import type { ExhaustiveArray } from "@shared/utils";
 
-const KEYS: ExhaustiveArray<keyof Task> = [
+const TASK_KEYS: ExhaustiveArray<keyof Task> = [
 	"id",
 	"title",
 	"description",
@@ -13,5 +13,11 @@ const KEYS: ExhaustiveArray<keyof Task> = [
 ];
 
 export const isTaskKey = (key: string): key is keyof Task => {
-	return KEYS.includes(key as keyof Task);
+	return TASK_KEYS.includes(key as keyof Task);
+};
+
+const PRIORITY_KEYS: ExhaustiveArray<TaskPriority> = ["p0", "p1", "p2", "p3"];
+
+export const isPriorityKey = (key: string): key is TaskPriority => {
+	return PRIORITY_KEYS.includes(key as TaskPriority);
 };

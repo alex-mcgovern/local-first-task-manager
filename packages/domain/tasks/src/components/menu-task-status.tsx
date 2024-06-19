@@ -39,7 +39,7 @@ export function MenuTaskStatus({ id, status }: { id: string; status: TaskStatus 
 	return (
 		<Menu.Trigger>
 			<TooltipTrigger delay={1000}>
-				<Button appearance="ghost" size="sm" square>
+				<Button appearance="ghost" data-testid={`menu_status_${status}`} size="sm" square>
 					<IconTaskStatus status={status} />
 				</Button>
 				<Tooltip placement="bottom">{getStatusString(status)}</Tooltip>
