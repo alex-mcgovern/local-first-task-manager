@@ -13,5 +13,6 @@ export default defineConfig({
 	},
 	env: {
 		CYPRESS_BASE_URL: "http://localhost:5173/",
+		ELECTRIC_SERVICE: process.env.ELECTRIC_SERVICE,
 	},
 });

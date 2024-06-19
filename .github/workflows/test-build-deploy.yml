@@ -54,9 +54,10 @@ jobs:
               with:
                   build: npm run build
                   start: npm run preview
-                  wait-on: http://localhost:3000
+                  wait-on: http://localhost:5173
               env:
-                  CYPRESS_BASE_URL: http://localhost:3000
+                  CYPRESS_BASE_URL: http://localhost:5173
+                  ELECTRIC_SERVICE: ${{ vars.ELECTRIC_SERVICE}}
 
     check_ref_name:
         name: "Check tag"
