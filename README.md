@@ -191,7 +191,6 @@ I'm sorry to hear that! I have run through these steps from a clean start, but I
 
 ## What would I have done if I had more time?
 
-- [ ] Mobile styling
 - [ ] Add running migrations to the CI/CD pipeline
 - [ ] Move DB logic into Redux, either using RTK query with fake endpoints, or with middleware, to allow access to dispatch and state
 - [ ] Round out styling — particularly on smaller screens, and add a mobile menu
