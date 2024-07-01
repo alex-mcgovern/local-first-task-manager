@@ -1,6 +1,6 @@
 import type { task_statusType as TaskStatus } from "@shared/electric-sql";
 
-import { Button, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
+import { Button, Menu, Popover, Tooltip } from "boondoggle";
 
 import { useElectric } from "@shared/electric-sql";
 import * as i18n from "@shared/i18n";
@@ -41,13 +41,13 @@ export function MenuTaskStatus({ id, status }: { id: string; status: TaskStatus 
 
 	return (
 		<Menu.Trigger>
-			<TooltipTrigger delay={1000}>
+			<Tooltip.Root delay={1000}>
 				<Button appearance="ghost" data-testid={`menu_status_${status}`} size="sm" square>
 					<IconTaskStatus status={status} />
 				</Button>
-				<Tooltip placement="bottom">{getStatusString(status)}</Tooltip>
-			</TooltipTrigger>
-			<Popover placement="right top">
+				<Tooltip.Body placement="bottom">{getStatusString(status)}</Tooltip.Body>
+			</Tooltip.Root>
+			<Popover.Root placement="right top">
 				<Menu.DropdownMenu disabledKeys={[status]} selectedKeys={[status]}>
 					<Menu.Section>
 						{STATUS_ITEMS.map((t) => {
@@ -66,7 +66,7 @@ export function MenuTaskStatus({ id, status }: { id: string; status: TaskStatus 
 						})}
 					</Menu.Section>
 				</Menu.DropdownMenu>
-			</Popover>
+			</Popover.Root>
 		</Menu.Trigger>
 	);
 }

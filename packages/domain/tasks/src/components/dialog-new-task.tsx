@@ -12,17 +12,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { fromDate, getLocalTimeZone } from "@internationalized/date";
 import {
 	Button,
-	ComboBoxButton,
-	ComboBoxInput,
+	ComboBox,
 	DateInput,
-	DatePickerButton,
-	DatePickerClearButton,
-	DatePickerPreset,
+	DatePicker,
 	Dialog,
 	Form,
-	FormComboBox,
-	FormDatePicker,
-	FormTextField,
 	Grid,
 	Group,
 	Icon,
@@ -131,17 +125,17 @@ function NewTaskFields({ close }: { close: () => void }) {
 
 	return (
 		<>
-			<FormTextField autoFocus className="mb-4" name="title">
+			<Form.TextField autoFocus className="mb-4" name="title">
 				<Label>{i18n.title}</Label>
 				<Input ref={title_input_ref} />
-			</FormTextField>
+			</Form.TextField>
 
-			<FormTextField className="mb-4" name="description">
+			<Form.TextField className="mb-4" name="description">
 				<Label>{i18n.description}</Label>
 				<TextArea />
-			</FormTextField>
+			</Form.TextField>
 
-			<FormDatePicker
+			<Form.DatePicker
 				className="mb-4"
 				data-testid="due_date"
 				granularity="minute"
@@ -150,11 +144,11 @@ function NewTaskFields({ close }: { close: () => void }) {
 				<Label>{i18n.due_date}</Label>
 				<Group>
 					<DateInput unstyled />
-					<DatePickerClearButton />
-					<DatePickerButton />
+					<DatePicker.ClearButton />
+					<DatePicker.Button />
 				</Group>
 				<Grid className="mt-2" columns={3}>
-					<DatePickerPreset
+					<DatePicker.Preset
 						date={fromDate(new Date(), getLocalTimeZone()).set({
 							hour: 18,
 							millisecond: 0,
@@ -163,8 +157,8 @@ function NewTaskFields({ close }: { close: () => void }) {
 						})}
 					>
 						{i18n.date_preset_today}
-					</DatePickerPreset>
-					<DatePickerPreset
+					</DatePicker.Preset>
+					<DatePicker.Preset
 						date={fromDate(new Date(), getLocalTimeZone()).add({ days: 1 }).set({
 							hour: 18,
 							millisecond: 0,
@@ -173,8 +167,8 @@ function NewTaskFields({ close }: { close: () => void }) {
 						})}
 					>
 						{i18n.date_preset_tomorrow}
-					</DatePickerPreset>
-					<DatePickerPreset
+					</DatePicker.Preset>
+					<DatePicker.Preset
 						date={fromDate(new Date(), getLocalTimeZone()).add({ weeks: 1 }).set({
 							hour: 18,
 							millisecond: 0,
@@ -183,13 +177,13 @@ function NewTaskFields({ close }: { close: () => void }) {
 						})}
 					>
 						{i18n.date_preset_1_week}
-					</DatePickerPreset>
+					</DatePicker.Preset>
 				</Grid>
-			</FormDatePicker>
+			</Form.DatePicker>
 
 			<hr />
 
-			<FormComboBox<TaskPriority>
+			<Form.ComboBox<TaskPriority>
 				className="mb-4"
 				defaultItems={PRIORITY_MENU_ITEMS}
 				name="priority"
@@ -205,12 +199,12 @@ function NewTaskFields({ close }: { close: () => void }) {
 			>
 				<Label>{i18n.priority}</Label>
 				<Group>
-					<ComboBoxInput unstyled />
-					<ComboBoxButton />
+					<ComboBox.Input unstyled />
+					<ComboBox.Button />
 				</Group>
-			</FormComboBox>
+			</Form.ComboBox>
 
-			<FormComboBox<TaskStatus>
+			<Form.ComboBox<TaskStatus>
 				className="mb-4"
 				defaultItems={[
 					{
@@ -242,10 +236,10 @@ function NewTaskFields({ close }: { close: () => void }) {
 			>
 				<Label>{i18n.status}</Label>
 				<Group>
-					<ComboBoxInput unstyled />
-					<ComboBoxButton />
+					<ComboBox.Input unstyled />
+					<ComboBox.Button />
 				</Group>
-			</FormComboBox>
+			</Form.ComboBox>
 		</>
 	);
 }
@@ -298,7 +292,7 @@ export function DialogNewTask() {
 			</Button>
 			<Dialog.ModalOverlay isDismissable>
 				<Dialog.Modal>
-					<Form<CreateTask>
+					<Form.Root<CreateTask>
 						onError={(e) => {
 							console.error(e);
 						}}
@@ -347,7 +341,7 @@ export function DialogNewTask() {
 								);
 							}}
 						</Dialog.Root>
-					</Form>
+					</Form.Root>
 				</Dialog.Modal>
 			</Dialog.ModalOverlay>
 		</Dialog.Trigger>
