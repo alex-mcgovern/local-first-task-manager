@@ -10,17 +10,10 @@ import { fromDate, getLocalTimeZone, parseAbsoluteToLocal } from "@international
 import {
 	App,
 	Button,
-	ComboBoxButton,
-	ComboBoxInput,
+	ComboBox,
 	DateInput,
 	DatePicker,
-	DatePickerButton,
-	DatePickerClearButton,
-	DatePickerPreset,
 	Form,
-	FormComboBox,
-	FormDatePicker,
-	FormTextField,
 	Grid,
 	Group,
 	Input,
@@ -82,7 +75,7 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 	};
 
 	return (
-		<Form<UpdateTask>
+		<Form.Root<UpdateTask>
 			key={Object.values(task).join("-")} // Ensure that if any value changes, the component re-renders
 			onSubmit={updateTask}
 			options={{
@@ -101,25 +94,25 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 			</App.Drawer.Header>
 
 			<App.Drawer.Content>
-				<FormTextField className="mb-4" name="title">
+				<Form.TextField className="mb-4" name="title">
 					<Label>{i18n.title}</Label>
 					<Input />
-				</FormTextField>
+				</Form.TextField>
 
-				<FormTextField className="mb-4" name="description">
+				<Form.TextField className="mb-4" name="description">
 					<Label>{i18n.description}</Label>
 					<TextArea />
-				</FormTextField>
+				</Form.TextField>
 
-				<FormDatePicker className="mb-4" data-testid="due_date" name="due_date">
+				<Form.DatePicker className="mb-4" data-testid="due_date" name="due_date">
 					<Label>{i18n.due_date}</Label>
 					<Group>
 						<DateInput unstyled />
-						<DatePickerClearButton />
-						<DatePickerButton />
+						<DatePicker.ClearButton />
+						<DatePicker.Button />
 					</Group>
 					<Grid className="mt-2" columns={3}>
-						<DatePickerPreset
+						<DatePicker.Preset
 							date={fromDate(new Date(), getLocalTimeZone()).set({
 								hour: 18,
 								millisecond: 0,
@@ -128,8 +121,8 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 							})}
 						>
 							{i18n.date_preset_today}
-						</DatePickerPreset>
-						<DatePickerPreset
+						</DatePicker.Preset>
+						<DatePicker.Preset
 							date={fromDate(new Date(), getLocalTimeZone()).add({ days: 1 }).set({
 								hour: 18,
 								millisecond: 0,
@@ -138,8 +131,8 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 							})}
 						>
 							{i18n.date_preset_tomorrow}
-						</DatePickerPreset>
-						<DatePickerPreset
+						</DatePicker.Preset>
+						<DatePicker.Preset
 							date={fromDate(new Date(), getLocalTimeZone()).add({ weeks: 1 }).set({
 								hour: 18,
 								millisecond: 0,
@@ -148,13 +141,13 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 							})}
 						>
 							{i18n.date_preset_1_week}
-						</DatePickerPreset>
+						</DatePicker.Preset>
 					</Grid>
-				</FormDatePicker>
+				</Form.DatePicker>
 
 				<hr />
 
-				<FormComboBox<TaskPriority>
+				<Form.ComboBox<TaskPriority>
 					className="mb-4"
 					defaultItems={PRIORITY_MENU_ITEMS}
 					name="priority"
@@ -170,12 +163,12 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 				>
 					<Label>{i18n.priority}</Label>
 					<Group>
-						<ComboBoxInput unstyled />
-						<ComboBoxButton />
+						<ComboBox.Input unstyled />
+						<ComboBox.Button />
 					</Group>
-				</FormComboBox>
+				</Form.ComboBox>
 
-				<FormComboBox<TaskStatus>
+				<Form.ComboBox<TaskStatus>
 					className="mb-4"
 					defaultItems={[
 						{
@@ -198,10 +191,10 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 				>
 					<Label>{i18n.status}</Label>
 					<Group>
-						<ComboBoxInput unstyled />
-						<ComboBoxButton />
+						<ComboBox.Input unstyled />
+						<ComboBox.Button />
 					</Group>
-				</FormComboBox>
+				</Form.ComboBox>
 
 				<div className="flex gap-2 justify-end">
 					<Button type="submit">{i18n.update}</Button>
@@ -209,24 +202,24 @@ export function DrawerTaskDetails({ id }: { id: string }) {
 
 				<hr />
 
-				<DatePicker
+				<DatePicker.Root
 					className="mb-4"
 					isReadOnly
 					value={parseAbsoluteToLocal(task.created_at.toISOString())}
 				>
 					<Label>{i18n.created_at}</Label>
 					<DateInput />
-				</DatePicker>
+				</DatePicker.Root>
 
-				<DatePicker
+				<DatePicker.Root
 					className="mb-4"
 					isReadOnly
 					value={parseAbsoluteToLocal(task.updated_at.toISOString())}
 				>
 					<Label>{i18n.updated_at}</Label>
 					<DateInput />
-				</DatePicker>
+				</DatePicker.Root>
 			</App.Drawer.Content>
-		</Form>
+		</Form.Root>
 	);
 }

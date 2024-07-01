@@ -8,7 +8,7 @@ import { TaskDetails, Tasks } from "@domain/tasks";
 export default function MainApp() {
 	return (
 		<Route nest path="/">
-			<App.Container>
+			<App.Root>
 				<SideNav />
 				<App.Main.Root>
 					<Route component={Tasks} nest path="/" />
@@ -18,7 +18,7 @@ export default function MainApp() {
 						}}
 					</Route>
 				</App.Main.Root>
-			</App.Container>
+			</App.Root>
 		</Route>
 	);
 }

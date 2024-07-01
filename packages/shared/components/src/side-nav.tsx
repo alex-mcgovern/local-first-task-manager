@@ -10,12 +10,17 @@ export function SideNav() {
 	const path = location.split("/")[1];
 
 	return (
-		<App.SideBar>
-			<App.SideNavSection>
-				<App.Link data-testid="nav-home" href="/" icon={faHome} isCurrent={path === "/"}>
+		<App.Nav.Root>
+			<App.Nav.Section>
+				<App.Nav.Link
+					data-testid="nav-home"
+					href="/"
+					icon={faHome}
+					isCurrent={path === "/"}
+				>
 					{i18n.home}
-				</App.Link>
-			</App.SideNavSection>
-		</App.SideBar>
+				</App.Nav.Link>
+			</App.Nav.Section>
+		</App.Nav.Root>
 	);
 }

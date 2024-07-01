@@ -4,16 +4,7 @@ import type { task_statusType as TaskStatus } from "@shared/electric-sql";
 import { faClockRotateLeft } from "@fortawesome/pro-solid-svg-icons/faClockRotateLeft";
 import { faFilterList } from "@fortawesome/pro-solid-svg-icons/faFilterList";
 import { faTimes } from "@fortawesome/pro-solid-svg-icons/faTimes";
-import {
-	App,
-	Button,
-	FilterButton,
-	Icon,
-	Menu,
-	Popover,
-	Tooltip,
-	TooltipTrigger,
-} from "boondoggle";
+import { App, Button, FilterMenu, Icon, Menu, Popover, Tooltip } from "boondoggle";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as i18n from "@shared/i18n";
@@ -45,21 +36,21 @@ function FilterControlTaskStatus() {
 	}
 
 	return (
-		<FilterButton.Group isFilterApplied>
-			<FilterButton.Label>{i18n.status}</FilterButton.Label>
+		<FilterMenu.Root isFilterApplied>
+			<FilterMenu.Label>{i18n.status}</FilterMenu.Label>
 			<Menu.Trigger>
-				<FilterButton.Button>{filterLabel}</FilterButton.Button>
-				<Popover>
+				<FilterMenu.Button>{filterLabel}</FilterMenu.Button>
+				<Popover.Root>
 					<MenuTaskFilterStatus />
-				</Popover>
+				</Popover.Root>
 			</Menu.Trigger>
 
-			<FilterButton.Remove
+			<FilterMenu.Remove
 				onPress={() => {
 					return dispatch(statusFilterCleared());
 				}}
 			/>
-		</FilterButton.Group>
+		</FilterMenu.Root>
 	);
 }
 
@@ -78,21 +69,21 @@ function FilterControlDueDate() {
 	const filterLabel = getDateRangeString(filter);
 
 	return (
-		<FilterButton.Group isFilterApplied>
-			<FilterButton.Label>{i18n.due_date}</FilterButton.Label>
+		<FilterMenu.Root isFilterApplied>
+			<FilterMenu.Label>{i18n.due_date}</FilterMenu.Label>
 			<Menu.Trigger>
-				<FilterButton.Button>{filterLabel}</FilterButton.Button>
-				<Popover>
+				<FilterMenu.Button>{filterLabel}</FilterMenu.Button>
+				<Popover.Root>
 					<MenuTaskFilterDueDate />
-				</Popover>
+				</Popover.Root>
 			</Menu.Trigger>
 
-			<FilterButton.Remove
+			<FilterMenu.Remove
 				onPress={() => {
 					return dispatch(dueDateFilterCleared());
 				}}
 			/>
-		</FilterButton.Group>
+		</FilterMenu.Root>
 	);
 }
 
@@ -248,32 +239,32 @@ function MenuTaskFilters() {
 
 	return (
 		<Menu.Trigger>
-			<TooltipTrigger delay={1000}>
+			<Tooltip.Root delay={1000}>
 				<Button appearance={is_filtered ? "ghost" : "secondary"} square={is_filtered}>
 					<Icon color="grey" icon={faFilterList} />
 					{is_filtered ? null : i18n.filters}
 				</Button>
-				<Tooltip placement="bottom">{i18n.filter_tasks}</Tooltip>
-			</TooltipTrigger>
-			<Popover>
+				<Tooltip.Body placement="bottom">{i18n.filter_tasks}</Tooltip.Body>
+			</Tooltip.Root>
+			<Popover.Root>
 				<Menu.DropdownMenu>
 					<Menu.Section>
 						<Menu.SubMenuTrigger>
 							<Menu.Item>{i18n.status}</Menu.Item>
-							<Popover placement="right top">
+							<Popover.Root placement="right top">
 								<MenuTaskFilterStatus />
-							</Popover>
+							</Popover.Root>
 						</Menu.SubMenuTrigger>
 
 						<Menu.SubMenuTrigger>
 							<Menu.Item>{i18n.due_date}</Menu.Item>
-							<Popover placement="right top">
+							<Popover.Root placement="right top">
 								<MenuTaskFilterDueDate />
-							</Popover>
+							</Popover.Root>
 						</Menu.SubMenuTrigger>
 					</Menu.Section>
 				</Menu.DropdownMenu>
-			</Popover>
+			</Popover.Root>
 		</Menu.Trigger>
 	);
 }

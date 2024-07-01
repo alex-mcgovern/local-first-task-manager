@@ -1,6 +1,6 @@
 import type { task_priorityType as TaskPriority } from "@shared/electric-sql";
 
-import { Button, Menu, Popover, Tooltip, TooltipTrigger } from "boondoggle";
+import { Button, Menu, Popover, Tooltip } from "boondoggle";
 import { useDispatch } from "react-redux";
 
 import { useElectric } from "@shared/electric-sql";
@@ -31,7 +31,7 @@ export function MenuTaskPriority({ id, priority }: { id: string; priority: TaskP
 
 	return (
 		<Menu.Trigger>
-			<TooltipTrigger delay={1000}>
+			<Tooltip.Root delay={1000}>
 				<Button
 					appearance="ghost"
 					data-testid={`menu_priority_${priority}`}
@@ -40,10 +40,10 @@ export function MenuTaskPriority({ id, priority }: { id: string; priority: TaskP
 				>
 					<IconTaskPriority priority={priority} />
 				</Button>
-				<Tooltip placement="bottom">{getPriorityString(priority)}</Tooltip>
-			</TooltipTrigger>
+				<Tooltip.Body placement="bottom">{getPriorityString(priority)}</Tooltip.Body>
+			</Tooltip.Root>
 
-			<Popover placement="right top">
+			<Popover.Root placement="right top">
 				<Menu.DropdownMenu disabledKeys={[priority]} selectedKeys={[priority]}>
 					<Menu.Section>
 						{PRIORITY_MENU_ITEMS.map((t) => {
@@ -62,7 +62,7 @@ export function MenuTaskPriority({ id, priority }: { id: string; priority: TaskP
 						})}
 					</Menu.Section>
 				</Menu.DropdownMenu>
-			</Popover>
+			</Popover.Root>
 		</Menu.Trigger>
 	);
 }

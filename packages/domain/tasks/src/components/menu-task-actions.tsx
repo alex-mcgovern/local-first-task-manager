@@ -22,7 +22,7 @@ export function MenuTaskActions({ id }: { id: string }) {
 			<Button appearance="ghost" square>
 				<Icon icon={faEllipsis} />
 			</Button>
-			<Popover placement="bottom right">
+			<Popover.Root placement="bottom right">
 				<Menu.DropdownMenu>
 					<Menu.Section>
 						<Menu.Item
@@ -35,7 +35,7 @@ export function MenuTaskActions({ id }: { id: string }) {
 						</Menu.Item>
 					</Menu.Section>
 				</Menu.DropdownMenu>
-			</Popover>
+			</Popover.Root>
 		</Menu.Trigger>
 	);
 }
